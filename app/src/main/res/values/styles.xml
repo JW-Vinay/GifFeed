@@ -1,0 +1,21 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!--<item name=”colorPrimary”>@color/my_awesome_color</item>-->
+        <item name="colorPrimary">@color/blue_1</item>
+        <item name="colorPrimaryDark">@color/blue_2</item>
+    </style>
+
+    <style name="editTextStyle" parent="@android:style/TextAppearance">
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColorHint">@color/light_gray</item>
+        <item name="android:gravity">start|center_vertical</item>
+    </style>
+</resources>

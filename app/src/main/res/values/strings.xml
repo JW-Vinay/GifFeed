@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">GifFeed</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="hint_caption">Caption your feed</string>
+
+    <string-array name="content_tabs">
+        <item>GIFs</item>
+        <item>Sticker</item>
+    </string-array>
+</resources>
