@@ -1,10 +1,13 @@
 package com.giffedup.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.giffedup.R;
 import com.giffedup.adapters.TabsPagerAdapter;
@@ -12,10 +15,7 @@ import com.giffedup.adapters.TabsPagerAdapter;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by vinay-r on 8/7/15.
- */
-public class GiffSelectorActivity extends AppCompatActivity {
+public class StoryListActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private ViewPager mPager;
@@ -25,12 +25,12 @@ public class GiffSelectorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.image_selector_view);
+        setContentView(R.layout.activity_story_list);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setUpToolbar();
         mPager = (ViewPager) findViewById(R.id.viewpager);
-        //mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        //setUpTabs();
+        mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        setUpTabs();
     }
 
     private void setUpToolbar() {
@@ -62,4 +62,5 @@ public class GiffSelectorActivity extends AppCompatActivity {
             }
         });
     }
+
 }

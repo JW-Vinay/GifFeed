@@ -11,4 +11,5 @@
         <item>GIFs</item>
         <item>Sticker</item>
     </string-array>
+    <string name="title_activity_story_list">StoryListActivity</string>
 </resources>
