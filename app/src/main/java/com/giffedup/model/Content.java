@@ -2,8 +2,12 @@ package com.giffedup.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 
 /**
  * Created by vinay-r on 8/10/15.
@@ -105,24 +109,24 @@ public class Content implements Parcelable {
         mTrendingDateTime = trendingDateTime;
     }
 
-    public void setImages(Images images) {
-        mImages = images;
+    public Images getmImages() {
+        return mImages;
     }
 
     public ImageConfigurationModel getSmallImage() {
-        return (null != mImages) ? mImages.getSmall() : null;
+        return (null != getmImages()) ? getmImages().getSmall() : null;
     }
 
     public ImageConfigurationModel getDownsizedImage() {
-        return (null != mImages) ? mImages.getDownSized() : null;
+        return (null != getmImages()) ? getmImages().getDownSized() : null;
     }
 
     public ImageConfigurationModel getDownsizedStillImage() {
-        return (null != mImages) ? mImages.getDownSizedStill() : null;
+        return (null != getmImages()) ? getmImages().getDownSizedStill() : null;
     }
 
     public ImageConfigurationModel getOriginalImage() {
-        return (null != mImages) ? mImages.getOriginal() : null;
+        return (null != getmImages()) ? getmImages().getOriginal() : null;
     }
 
     public void setContentType(String contentType) {
@@ -133,8 +137,47 @@ public class Content implements Parcelable {
         return mContentType;
     }
 
-    public Content(){
+    public Content() {
 
+    }
+
+    public ParseObject createParseObject() {
+        ParseObject parseObject = new ParseObject("Content");
+        parseObject.put("id", mId);
+        parseObject.put("type", mType);
+        if(!TextUtils.isEmpty(mContentType))
+            parseObject.put("contentType", mContentType);
+//        parseObject.put("rating", mRating);
+//        parseObject.put("caption", mCaption);
+        parseObject.put("sourceUrl", mSourceUrl);
+        parseObject.put("creationDateTime", mCreationDateTime);
+        parseObject.put("trendingDateTime", mTrendingDateTime);
+        parseObject.put("images", mImages.createParseObject());
+
+        return parseObject;
+    }
+
+    public Content(ParseObject parseObject) {
+
+        parseObject.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(final ParseObject object, ParseException e) {
+                setData(object);
+
+            }
+        });
+    }
+
+    public void setData(ParseObject object) {
+        mId = object.getString("id");
+        mType = object.getString("type");
+        mContentType = object.getString("contentType");
+        mRating = object.getString("rating");
+        mCaption = object.getString("caption");
+        mCreationDateTime = object.getString("creationDateTime");
+        mTrendingDateTime = object.getString("trendingDateTime");
+        mSourceUrl = object.getString("sourceUrl");
+        mImages = new Images(object.getParseObject("images"));
     }
 
     public Content(Parcel in) {
@@ -179,6 +222,33 @@ public class Content implements Parcelable {
 
         @SerializedName("fixed_width_downsampled")
         private ImageConfigurationModel mSmall;
+
+        public Images() {
+
+        }
+
+        public Images(ParseObject parseObject) {
+            parseObject.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    mDownSized = new ImageConfigurationModel(object.getParseObject("downsized"));
+                    mDownSizedStill = new ImageConfigurationModel(object.getParseObject("downsizedStill"));
+                    mOriginal = new ImageConfigurationModel(object.getParseObject("original"));
+                    mSmall = new ImageConfigurationModel(object.getParseObject("small"));
+                }
+            });
+
+        }
+
+        public ParseObject createParseObject() {
+            ParseObject parseObject = new ParseObject("Images");
+            parseObject.put("downsized",mDownSized.createParseObject());
+            parseObject.put("downsizedStill",mDownSizedStill.createParseObject());
+            parseObject.put("original",mOriginal.createParseObject());
+            parseObject.put("small",mSmall.createParseObject());
+
+            return parseObject;
+        }
 
         protected Images(Parcel in) {
             mDownSized = in.readParcelable(ImageConfigurationModel.class.getClassLoader());

@@ -3,9 +3,15 @@ package com.giffedup;
 import android.app.Application;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.giffedup.model.Content;
 import com.giffedup.model.ImageConfigurationModel;
+import com.parse.GetCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.List;
 
 /**
  * Created by vinay-r on 8/10/15.
@@ -17,34 +23,48 @@ public class GiffedUpApp extends Application {
         super.onCreate();
         ApplicationData.getInstance().init(this);
         Fresco.initialize(this);
-        ParseObject.registerSubclass(ImageConfigurationModel.class);
         Parse.initialize(this, "SnXKOhUUDEQ64ibzttzu5qWPDXBOwSfzTl4afVHF", "Dlr8mAK6QHoydGNjuIAIAZrdLKunO6FBa4MfTuZk");
 
-//        ParseQuery<ParseObject> query = ParseQuery.getQuery("Story");
-//        query.getInBackground("09w409VVU2", new GetCallback<ParseObject>() {
-//            public void done(ParseObject object, ParseException e) {
-//                if (e != null) {
-//                    e.printStackTrace();
-//                } else {
-//                    System.out.println(object.getString("title"));
-//                    List<ParseObject> feeds = object.getList("feeds");
-//
-//                    for(final ParseObject obj : feeds) {
-//
-//                        obj.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-//                            @Override
-//                            public void done(ParseObject object, ParseException e) {
-//                                System.out.println(object.getParseObject("original").get);
-//                                System.out.println(object.getString("title"));
-//                            }
-//                        });
-//
-//                        System.out.println();
-//                        System.out.println();
-//                    }
-//                }
-//            }
-//        });
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Story");
+        query.getInBackground("mV3HHywlRZ", new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e != null) {
+                    e.printStackTrace();
+                } else {
+                    System.out.println(object.getString("title"));
+                    object.getParseObject("original").fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                        @Override
+                        public void done(ParseObject object, ParseException e) {
+                            if(e != null)
+                                e.printStackTrace();
+
+                            ImageConfigurationModel model = ImageConfigurationModel.getConfiguration(object);
+                            System.out.println("main: " + model.getUrl());
+                        }
+                    });
+
+
+
+                    List<ParseObject> feeds = object.getList("feeds");
+
+                    for(final ParseObject obj : feeds) {
+
+                        obj.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject object, ParseException e) {
+
+                                Content content = new Content(object.getParseObject("content"));
+//                                System.out.println(content.getOriginalImage().getUrl());
+                                System.out.println(object.getString("title"));
+                            }
+                        });
+
+                        System.out.println();
+                        System.out.println();
+                    }
+                }
+            }
+        });
     }
 
 
