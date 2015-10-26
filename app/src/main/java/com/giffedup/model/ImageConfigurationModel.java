@@ -4,14 +4,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.parse.ParseClassName;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 /**
  * Created by vinay-r on 8/10/15.
  */
-@ParseClassName("Config")
-public class ImageConfigurationModel extends ParseObject implements Parcelable {
+public class ImageConfigurationModel implements Parcelable {
 
     @SerializedName("width")
     private int mWidth;
@@ -32,6 +32,25 @@ public class ImageConfigurationModel extends ParseObject implements Parcelable {
         mUrl = in.readString();
     }
 
+    protected ImageConfigurationModel(ParseObject parseObject) {
+        if(parseObject.isDataAvailable()) {
+            setData(parseObject);
+        } else {
+            parseObject.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    setData(object);
+                    System.out.println("url: " + getUrl());
+                }
+            });
+        }
+
+
+    }
+
+    public static final ImageConfigurationModel getConfiguration(ParseObject parseObject) {
+        return new ImageConfigurationModel(parseObject);
+    }
     public static final Creator<ImageConfigurationModel> CREATOR = new Creator<ImageConfigurationModel>() {
         @Override
         public ImageConfigurationModel createFromParcel(Parcel in) {
@@ -44,22 +63,31 @@ public class ImageConfigurationModel extends ParseObject implements Parcelable {
         }
     };
 
+    public ParseObject createParseObject() {
+        ParseObject object = new ParseObject("Config");
+        object.put("url", mUrl);
+        object.put("height", mHeight);
+        object.put("width", mWidth);
+
+        return object;
+    }
+
+    public void setData(ParseObject object) {
+        mUrl = object.getString("url");
+        mWidth = object.getInt("width");
+        mHeight = object.getInt("height");
+    }
+
     public String getUrl() {
-        if (getString("url") == null)
-            return mUrl;
-        return getString("url");
+        return mUrl;
     }
 
     public int getWidth() {
-        if (getInt("width") == 0)
-            return mWidth;
-        return getInt("width");
+        return mWidth;
     }
 
     public int getHeight() {
-        if (getInt("height") == 0)
-            return getHeight();
-        return getInt("height");
+        return getHeight();
     }
 
     @Override
@@ -76,16 +104,13 @@ public class ImageConfigurationModel extends ParseObject implements Parcelable {
 
     public void setmWidth(int width) {
         this.mWidth = width;
-        put("width", width);
     }
 
     public void setmHeight(int height) {
         this.mHeight = mHeight;
-        put("height", height);
     }
 
     public void setmUrl(String url) {
         this.mUrl = url;
-        put("url", url);
     }
 }

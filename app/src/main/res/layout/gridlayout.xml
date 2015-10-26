@@ -29,5 +29,6 @@
         android:background="@drawable/btn_selector"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:visibility="gone"/>
 </RelativeLayout>
