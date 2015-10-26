@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.giffedup.R;
 import com.giffedup.model.Content;
 import com.giffedup.model.ImageConfigurationModel;
+import com.giffedup.utils.ItemClickListener;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     private Context mContext;
     private List<? extends Content> mItems;
     private LayoutInflater mLayoutInflater;
+    private ItemClickListener mItemClickListener;
 
     public GridAdapter(Context context, List<? extends Content> items) {
         mContext = context;
@@ -61,13 +63,22 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         return mItems.size();
     }
 
-     class ViewHolder extends RecyclerView.ViewHolder {
+     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private SimpleDraweeView mImageView;
-
         public ViewHolder(View itemView) {
             super(itemView);
-
+            itemView.setOnClickListener(this);
             mImageView = (SimpleDraweeView) itemView.findViewById(R.id.imageview);
         }
+
+         @Override
+         public void onClick(View v) {
+             if(mItemClickListener != null)
+                mItemClickListener.onClick(v, getAdapterPosition());
+         }
+     }
+
+    public void setOnItemClicklistener(ItemClickListener itemClicklistener) {
+        this.mItemClickListener = itemClicklistener;
     }
 }

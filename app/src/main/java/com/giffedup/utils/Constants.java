@@ -5,5 +5,6 @@ package com.giffedup.utils;
  */
 public class Constants {
 
+    public static final int GIF_REQUEST = 100;
     public static final String TAG_FEED_TEMPLATE_FRAGMENT = "tag_feed_template_fragment";
 }

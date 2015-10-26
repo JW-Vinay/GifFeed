@@ -1,11 +1,15 @@
 package com.giffedup.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by vinay-r on 8/10/15.
  */
-public class Content {
+public class Content implements Parcelable {
+
 
     @SerializedName("type")
     private String mType;
@@ -32,6 +36,18 @@ public class Content {
     private Images mImages;
 
     private String mContentType;
+
+    public static final Creator<Content> CREATOR = new Creator<Content>() {
+        @Override
+        public Content createFromParcel(Parcel in) {
+            return new Content(in);
+        }
+
+        @Override
+        public Content[] newArray(int size) {
+            return new Content[size];
+        }
+    };
 
     public String getType() {
         return mType;
@@ -94,19 +110,19 @@ public class Content {
     }
 
     public ImageConfigurationModel getSmallImage() {
-        return (null != mImages)? mImages.getSmall() : null;
+        return (null != mImages) ? mImages.getSmall() : null;
     }
 
     public ImageConfigurationModel getDownsizedImage() {
-        return (null != mImages)? mImages.getDownSized() : null;
+        return (null != mImages) ? mImages.getDownSized() : null;
     }
 
     public ImageConfigurationModel getDownsizedStillImage() {
-        return (null != mImages)? mImages.getDownSizedStill() : null;
+        return (null != mImages) ? mImages.getDownSizedStill() : null;
     }
 
     public ImageConfigurationModel getOriginalImage() {
-        return (null != mImages)? mImages.getOriginal() : null;
+        return (null != mImages) ? mImages.getOriginal() : null;
     }
 
     public void setContentType(String contentType) {
@@ -114,10 +130,44 @@ public class Content {
     }
 
     public String getContentType() {
-     return mContentType;
+        return mContentType;
     }
 
-    private static class Images {
+    public Content(){
+
+    }
+
+    public Content(Parcel in) {
+        mId = in.readString();
+        mType = in.readString();
+        mCaption = in.readString();
+        mRating = in.readString();
+        mSourceUrl = in.readString();
+        mCreationDateTime = in.readString();
+        mTrendingDateTime = in.readString();
+        mContentType = in.readString();
+        mImages = in.readParcelable(Images.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
+        dest.writeString(mType);
+        dest.writeString(mCaption);
+        dest.writeString(mRating);
+        dest.writeString(mSourceUrl);
+        dest.writeString(mCreationDateTime);
+        dest.writeString(mTrendingDateTime);
+        dest.writeString(mContentType);
+        dest.writeParcelable(mImages, flags);
+    }
+
+    private static class Images implements Parcelable {
         @SerializedName("downsized")
         private ImageConfigurationModel mDownSized;
 
@@ -129,6 +179,25 @@ public class Content {
 
         @SerializedName("fixed_width_downsampled")
         private ImageConfigurationModel mSmall;
+
+        protected Images(Parcel in) {
+            mDownSized = in.readParcelable(ImageConfigurationModel.class.getClassLoader());
+            mDownSizedStill = in.readParcelable(ImageConfigurationModel.class.getClassLoader());
+            mOriginal = in.readParcelable(ImageConfigurationModel.class.getClassLoader());
+            mSmall = in.readParcelable(ImageConfigurationModel.class.getClassLoader());
+        }
+
+        public static final Creator<Images> CREATOR = new Creator<Images>() {
+            @Override
+            public Images createFromParcel(Parcel in) {
+                return new Images(in);
+            }
+
+            @Override
+            public Images[] newArray(int size) {
+                return new Images[size];
+            }
+        };
 
         protected ImageConfigurationModel getDownSized() {
             return mDownSized;
@@ -158,7 +227,22 @@ public class Content {
             mOriginal = original;
         }
 
-        protected void setSmall(ImageConfigurationModel small) { mSmall = small;}
+        protected void setSmall(ImageConfigurationModel small) {
+            mSmall = small;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(mDownSized, flags);
+            dest.writeParcelable(mDownSizedStill, flags);
+            dest.writeParcelable(mOriginal, flags);
+            dest.writeParcelable(mSmall, flags);
+        }
     }
 
 }

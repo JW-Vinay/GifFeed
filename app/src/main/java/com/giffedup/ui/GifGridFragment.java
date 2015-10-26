@@ -1,5 +1,7 @@
 package com.giffedup.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import com.giffedup.api.RestClient;
 import com.giffedup.api.models.ApiResponse;
 import com.giffedup.model.Content;
 import com.giffedup.model.GIF;
+import com.giffedup.utils.ItemClickListener;
 
 import java.util.List;
 
@@ -22,7 +25,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class GifGridFragment extends Fragment {
+public class GifGridFragment extends Fragment implements ItemClickListener {
 
     private RecyclerView mGridView;
     private RestClient mRestClient;
@@ -85,6 +88,7 @@ public class GifGridFragment extends Fragment {
     private void checkAndSetAdapters() {
         if(mGridAdapter == null && mGifList != null) {
             mGridAdapter = new GridAdapter(getActivity(), mGifList);
+            mGridAdapter.setOnItemClicklistener(this);
             mGridView.setAdapter(mGridAdapter);
         }
         else if(mGridAdapter != null) {
@@ -92,4 +96,12 @@ public class GifGridFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onClick(View view, int position) {
+//        Toast.makeText(getActivity(), ""+position, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.putExtra("content", mGifList.get(position));
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
+    }
 }
