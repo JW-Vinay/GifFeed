@@ -29,8 +29,8 @@ public class GiffSelectorActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setUpToolbar();
         mPager = (ViewPager) findViewById(R.id.viewpager);
-        //mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        //setUpTabs();
+//        mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+//        setUpTabs();
     }
 
     private void setUpToolbar() {

@@ -15,20 +15,27 @@
             android:name=".ui.AddFeedActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".ui.GiffSelectorActivity"
             android:screenOrientation="portrait" >
+
+        </activity>
+
+        <activity
+            android:name=".ui.StoryListActivity"
+            android:label="@string/title_activity_story_list"
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.StoryListActivity"
-            android:label="@string/title_activity_story_list"
-            android:theme="@style/AppTheme" >
         </activity>
     </application>
 

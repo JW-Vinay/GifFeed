@@ -1,19 +1,14 @@
 package com.giffedup.ui;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.giffedup.R;
 import com.giffedup.adapters.TabsPagerAdapter;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class StoryListActivity extends AppCompatActivity {
 
@@ -29,8 +24,9 @@ public class StoryListActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setUpToolbar();
         mPager = (ViewPager) findViewById(R.id.viewpager);
-        mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        setUpTabs();
+        //mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        //setUpTabs();
+        addBaseFragment();
     }
 
     private void setUpToolbar() {
@@ -40,7 +36,13 @@ public class StoryListActivity extends AppCompatActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setUpTabs() {
+    private void addBaseFragment() {
+        StoryListLayoutFragment storyListFrag = StoryListLayoutFragment.newInstance();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container, storyListFrag, "123"); //fix last arg later
+        ft.commit();
+    }
+    /*private void setUpTabs() {
         List<String> titles = Arrays.asList(getResources().getStringArray(R.array.content_tabs));
         mTabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager(), titles);
         mPager.setAdapter(mTabsPagerAdapter);
@@ -61,6 +63,6 @@ public class StoryListActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }*/
 
 }
