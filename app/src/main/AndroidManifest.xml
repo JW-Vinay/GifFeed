@@ -14,8 +14,24 @@
         <activity
             android:name=".ui.AddFeedActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity
+            android:name=".ui.GiffSelectorActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".ui.StoryListActivity"
+            android:label="@string/title_activity_story_list">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,13 +39,11 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.GiffSelectorActivity"
-            android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.SearchActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+        <activity
+            android:name=".ui.SearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
