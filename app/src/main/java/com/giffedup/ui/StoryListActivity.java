@@ -1,11 +1,15 @@
 package com.giffedup.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 
 import com.giffedup.R;
 import com.giffedup.adapters.TabsPagerAdapter;
@@ -16,6 +20,8 @@ public class StoryListActivity extends AppCompatActivity {
     private ViewPager mPager;
     private TabLayout mTabLayout;
     private TabsPagerAdapter mTabsPagerAdapter;
+    FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,23 @@ public class StoryListActivity extends AppCompatActivity {
         mPager = (ViewPager) findViewById(R.id.viewpager);
         //mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         //setUpTabs();
+//        final Button addButton = (Button) findViewById(R.id.fab);
+//        addButton.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View v){
+//                Intent intent = new Intent(StoryListActivity.this, GiffSelectorActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Your FAB click action here...
+                //Toast.makeText(getBaseContext(), "FAB Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(StoryListActivity.this, AddFeedActivity.class);
+                startActivity(intent);
+            }
+        });
         addBaseFragment();
     }
 
