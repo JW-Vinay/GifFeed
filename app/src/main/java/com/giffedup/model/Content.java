@@ -159,13 +159,18 @@ public class Content implements Parcelable {
 
     public Content(ParseObject parseObject) {
 
-        parseObject.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(final ParseObject object, ParseException e) {
-                setData(object);
+        if(parseObject.isDataAvailable()) {
+            parseObject.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(final ParseObject object, ParseException e) {
+                    setData(object);
 
-            }
-        });
+                }
+            });
+        }else {
+            setData(parseObject);
+        }
+
     }
 
     public void setData(ParseObject object) {

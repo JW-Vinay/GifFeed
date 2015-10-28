@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 
 import com.giffedup.R;
 import com.giffedup.adapters.TabsPagerAdapter;
@@ -65,6 +64,7 @@ public class StoryListActivity extends AppCompatActivity {
         ft.replace(R.id.container, storyListFrag, "123"); //fix last arg later
         ft.commit();
     }
+
     /*private void setUpTabs() {
         List<String> titles = Arrays.asList(getResources().getStringArray(R.array.content_tabs));
         mTabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager(), titles);

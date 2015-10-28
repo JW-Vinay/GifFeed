@@ -134,6 +134,7 @@ public class FeedTemplateFragment extends Fragment {
                 ParseObject object = new ParseObject("Feed");
                 object.put("title", model.getmTitle());
                 object.put("content", model.getmContent().createParseObject());
+//                object.put("parent", storyObject);
 //                object.put("contentId", model.getmContent().getId());
 //                storyObject.put("contentType", model.getmContent().getContentType());
 //                object.put("smallImage", model.getmContent().getSmallImage().createParseObject());
