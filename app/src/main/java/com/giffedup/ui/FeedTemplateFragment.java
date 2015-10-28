@@ -20,6 +20,7 @@ import com.giffedup.model.Content;
 import com.giffedup.model.FeedModel;
 import com.giffedup.utils.Constants;
 import com.giffedup.utils.EdtTextWatcher;
+import com.giffedup.utils.FragmentCommunicationInterface;
 import com.giffedup.utils.ItemClickListener;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -41,6 +42,21 @@ public class FeedTemplateFragment extends Fragment {
     private int mSelectedPosition = 0;
 
     private Handler mHandler = new Handler();
+    private FragmentCommunicationInterface mFragmentCommunicationInterface;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mFragmentCommunicationInterface = (FragmentCommunicationInterface)activity;
+        }catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement Communication Interface");
+        }
+
+
+
+    }
 
     private EdtTextWatcher mEdtTextWatcher = new EdtTextWatcher() {
         @Override
@@ -119,7 +135,7 @@ public class FeedTemplateFragment extends Fragment {
     }
 
     private void generateParseObjects() {
-        ParseObject storyObject = new ParseObject("Story");
+        final ParseObject storyObject = new ParseObject("Story");
         storyObject.put("title", mFeeds.get(0).getmTitle());
         storyObject.put("contentId", mFeeds.get(1).getmContent().getId());
 //        storyObject.put("contentType", mFeeds.get(1).getmContent().getContentType());
@@ -128,30 +144,58 @@ public class FeedTemplateFragment extends Fragment {
         storyObject.put("downSized", mFeeds.get(1).getmContent().getDownsizedImage().createParseObject());
         storyObject.put("original", mFeeds.get(1).getmContent().getOriginalImage().createParseObject());
 
-        List<ParseObject> parseObjectList = new ArrayList<ParseObject>();
-        for(FeedModel model : mFeeds) {
-            if(model.getmType() == FeedModel.contentType.FEED) {
-                ParseObject object = new ParseObject("Feed");
-                object.put("title", model.getmTitle());
-                object.put("content", model.getmContent().createParseObject());
-//                object.put("parent", storyObject);
+
+
+        storyObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+
+                if(e != null)
+                    e.printStackTrace();
+                else {
+
+                    List<ParseObject> parseObjectList = new ArrayList<ParseObject>();
+                    for (FeedModel model : mFeeds) {
+                        if (model.getmType() == FeedModel.contentType.FEED) {
+                            ParseObject object = new ParseObject("Feed");
+                            object.put("title", model.getmTitle());
+                            object.put("content", model.getmContent().createParseObject());
+                            object.put("parentId", storyObject.getObjectId());
 //                object.put("contentId", model.getmContent().getId());
 //                storyObject.put("contentType", model.getmContent().getContentType());
 //                object.put("smallImage", model.getmContent().getSmallImage().createParseObject());
 //                object.put("downsizedStill", model.getmContent().getDownsizedStillImage().createParseObject());
 //                object.put("downSized", model.getmContent().getDownsizedImage().createParseObject());
 //                object.put("original", model.getmContent().getOriginalImage().createParseObject());
-                parseObjectList.add(object);
-            }
-        }
-        storyObject.put("feeds", parseObjectList);
-        storyObject.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e != null)
-                    e.printStackTrace();
+                            parseObjectList.add(object);
+                            ParseObject.saveAllInBackground(parseObjectList, new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if(e != null)
+                                        e.printStackTrace();
+                                    else
+                                    {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putInt("finish", Activity.RESULT_OK);
+                                        mFragmentCommunicationInterface.sendMessage(bundle);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+
             }
         });
+
+//        storyObject.put("feeds", parseObjectList);
+//        storyObject.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                if(e != null)
+//                    e.printStackTrace();
+//            }
+//        });
 
     }
     @Override

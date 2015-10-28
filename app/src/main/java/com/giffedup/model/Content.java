@@ -159,7 +159,7 @@ public class Content implements Parcelable {
 
     public Content(ParseObject parseObject) {
 
-        if(parseObject.isDataAvailable()) {
+        if(!parseObject.isDataAvailable()) {
             parseObject.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                 @Override
                 public void done(final ParseObject object, ParseException e) {
@@ -233,15 +233,23 @@ public class Content implements Parcelable {
         }
 
         public Images(ParseObject parseObject) {
-            parseObject.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject object, ParseException e) {
-                    mDownSized = new ImageConfigurationModel(object.getParseObject("downsized"));
-                    mDownSizedStill = new ImageConfigurationModel(object.getParseObject("downsizedStill"));
-                    mOriginal = new ImageConfigurationModel(object.getParseObject("original"));
-                    mSmall = new ImageConfigurationModel(object.getParseObject("small"));
-                }
-            });
+            if(!parseObject.isDataAvailable()) {
+                parseObject.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        mDownSized = new ImageConfigurationModel(object.getParseObject("downsized"));
+                        mDownSizedStill = new ImageConfigurationModel(object.getParseObject("downsizedStill"));
+                        mOriginal = new ImageConfigurationModel(object.getParseObject("original"));
+                        mSmall = new ImageConfigurationModel(object.getParseObject("small"));
+                    }
+                });
+            } else {
+                mOriginal = new ImageConfigurationModel(parseObject.getParseObject("original"));
+                mDownSized = new ImageConfigurationModel(parseObject.getParseObject("downsized"));
+                mDownSizedStill = new ImageConfigurationModel(parseObject.getParseObject("downsizedStill"));
+                mSmall = new ImageConfigurationModel(parseObject.getParseObject("small"));
+            }
+
 
         }
 

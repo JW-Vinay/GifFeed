@@ -28,9 +28,8 @@
 
         </activity>
 
-        <activity
-            android:name=".ui.StoryListActivity"
-            android:label="@string/title_activity_story_list">
+        <activity android:name=".ui.StoryListActivity"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

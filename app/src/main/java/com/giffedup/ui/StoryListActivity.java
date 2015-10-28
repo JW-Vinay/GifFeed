@@ -1,5 +1,6 @@
 package com.giffedup.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.view.View;
 
 import com.giffedup.R;
 import com.giffedup.adapters.TabsPagerAdapter;
+import com.giffedup.utils.Constants;
 
 public class StoryListActivity extends AppCompatActivity {
 
@@ -45,7 +47,7 @@ public class StoryListActivity extends AppCompatActivity {
                 // Your FAB click action here...
                 //Toast.makeText(getBaseContext(), "FAB Clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(StoryListActivity.this, AddFeedActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Constants.ADD_REQUEST);
             }
         });
         addBaseFragment();
@@ -65,27 +67,17 @@ public class StoryListActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    /*private void setUpTabs() {
-        List<String> titles = Arrays.asList(getResources().getStringArray(R.array.content_tabs));
-        mTabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager(), titles);
-        mPager.setAdapter(mTabsPagerAdapter);
-        mTabLayout.setupWithViewPager(mPager);
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mPager.setCurrentItem(tab.getPosition());
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Constants.ADD_REQUEST && resultCode == Activity.RESULT_OK) {
+            StoryListLayoutFragment fragment = (StoryListLayoutFragment)
+                    getSupportFragmentManager().findFragmentByTag("123");
+            if(fragment != null) {
+                fragment.reload();
             }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }*/
+        }
+    }
 
 }

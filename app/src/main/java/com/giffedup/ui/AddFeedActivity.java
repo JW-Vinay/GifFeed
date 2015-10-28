@@ -1,5 +1,6 @@
 package com.giffedup.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -10,8 +11,9 @@ import android.view.MenuItem;
 
 import com.giffedup.R;
 import com.giffedup.utils.Constants;
+import com.giffedup.utils.FragmentCommunicationInterface;
 
-public class AddFeedActivity extends AppCompatActivity {
+public class AddFeedActivity extends AppCompatActivity implements FragmentCommunicationInterface {
 
     private Toolbar mToolbar;
 
@@ -28,7 +30,7 @@ public class AddFeedActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         mToolbar.setTitle(R.string.app_name);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void addBaseFragment() {
@@ -51,6 +53,23 @@ public class AddFeedActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                setResult(RESULT_CANCELED);
+                break;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void sendMessage(Bundle bundle) {
+
+        if(bundle != null) {
+            int message = bundle.getInt("finish", Activity.RESULT_CANCELED);
+            setResult(message);
+            finish();
+        }
     }
 }

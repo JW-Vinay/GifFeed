@@ -1,13 +1,12 @@
 package com.giffedup.model;
 
-import com.parse.ParseObject;
-
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by akshay on 10/27/15.
  */
-public class StoryModel {
+public class StoryModel implements Parcelable{
 
     String id;
     String contentId;
@@ -27,6 +26,39 @@ public class StoryModel {
         this.downsizedStill = downsizedStill;
         this.original = original;
         this.smallImage = smallImage;
+    }
+
+    protected StoryModel(Parcel in) {
+        id = in.readString();
+        contentId = in.readString();
+        title = in.readString();
+        downSized = in.readParcelable(ImageConfigurationModel.class.getClassLoader());
+        downsizedStill = in.readParcelable(ImageConfigurationModel.class.getClassLoader());
+        original = in.readParcelable(ImageConfigurationModel.class.getClassLoader());
+        smallImage = in.readParcelable(ImageConfigurationModel.class.getClassLoader());
+    }
+
+    public static final Creator<StoryModel> CREATOR = new Creator<StoryModel>() {
+        @Override
+        public StoryModel createFromParcel(Parcel in) {
+            return new StoryModel(in);
+        }
+
+        @Override
+        public StoryModel[] newArray(int size) {
+            return new StoryModel[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(contentId);
+        dest.writeString(title);
+        dest.writeParcelable(downSized, flags);
+        dest.writeParcelable(downsizedStill, flags);
+        dest.writeParcelable(original, flags);
+        dest.writeParcelable(smallImage, flags);
     }
 
     public String getId() {
@@ -84,5 +116,11 @@ public class StoryModel {
     public void setSmallImage(ImageConfigurationModel smallImage) {
         this.smallImage = smallImage;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
 
 }
