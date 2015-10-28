@@ -1,8 +1,11 @@
 package com.giffedup.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import com.giffedup.api.RestClient;
 import com.giffedup.api.models.ApiResponse;
 import com.giffedup.model.Content;
 import com.giffedup.model.Sticker;
+import com.giffedup.utils.ItemClickListener;
 
 import java.util.List;
 
@@ -26,7 +30,7 @@ import retrofit.client.Response;
 /**
  * Created by vinay-r on 8/10/15.
  */
-public class StickersFragment extends Fragment {
+public class StickersFragment extends Fragment implements ItemClickListener {
 
     private RecyclerView mGridView;
     private RestClient mRestClient;
@@ -52,6 +56,7 @@ public class StickersFragment extends Fragment {
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         mGridView.setLayoutManager(mLayoutManager);
+        mGridView.setItemAnimator(new DefaultItemAnimator());
         return view;
     }
 
@@ -90,10 +95,20 @@ public class StickersFragment extends Fragment {
     private void checkAndSetAdapters() {
         if(mGridAdapter == null && mStickerList != null) {
             mGridAdapter = new GridAdapter(getActivity(), mStickerList);
+            mGridAdapter.setOnItemClicklistener(this);
             mGridView.setAdapter(mGridAdapter);
         }
         else if(mGridAdapter != null) {
             mGridAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+//        Toast.makeText(getActivity(), ""+position, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.putExtra("content", mStickerList.get(position));
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
     }
 }

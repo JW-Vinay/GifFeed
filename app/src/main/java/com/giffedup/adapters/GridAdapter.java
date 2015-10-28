@@ -44,7 +44,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ImageConfigurationModel  imageConfigurationModel = mItems.get(position).getSmallImage();
+        ImageConfigurationModel  imageConfigurationModel = mItems.get(position).getDownsizedImage();
         Uri uri = Uri.parse(imageConfigurationModel.getUrl());
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(uri)

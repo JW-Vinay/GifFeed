@@ -7,11 +7,14 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/imageview"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:minWidth="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         fresco:fadeDuration="200"
-        fresco:actualImageScaleType="centerCrop"
+        android:background="@android:color/black"
+        fresco:actualImageScaleType="fitCenter"
         fresco:placeholderImage="@drawable/ic_home"
         fresco:failureImage="@drawable/ic_busy"
+        fresco:viewAspectRatio="1.33"
         />
 </LinearLayout>

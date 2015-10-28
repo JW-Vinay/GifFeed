@@ -5,6 +5,7 @@ import com.giffedup.model.Pages;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vinay-r on 8/10/15.
@@ -29,7 +30,7 @@ public class ApiResponse {
         return mHttResponse;
     }
 
-    public ArrayList<? extends Content> getContentList() {
+    public List<? extends Content> getContentList() {
 
         return mContentList;
     }

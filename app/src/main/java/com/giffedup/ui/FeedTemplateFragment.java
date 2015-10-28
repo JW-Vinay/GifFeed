@@ -106,13 +106,6 @@ public class FeedTemplateFragment extends Fragment {
         mAdapter.setOnItemClicklistener(mItemClickListener);
         mAdapter.setmEdtTextWatcher(mEdtTextWatcher);
         mListView.setAdapter(mAdapter);
-//        mImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), GiffSelectorActivity.class);
-//                startActivityForResult(intent, Constants.GIF_REQUEST);
-//            }
-//        });
     }
 
     @Override

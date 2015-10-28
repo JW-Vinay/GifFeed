@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -43,6 +45,12 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.gridlayout, container, false);
         mGridView = (RecyclerView) view.findViewById(R.id.recyclerview);
@@ -50,6 +58,7 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         mGridView.setLayoutManager(mLayoutManager);
+        mGridView.setItemAnimator(new DefaultItemAnimator());
         return view;
     }
 
@@ -83,6 +92,16 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
     public void onResume() {
         super.onResume();
         checkAndSetAdapters();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch ((item.getItemId())) {
+            case R.id.action_search:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void checkAndSetAdapters() {

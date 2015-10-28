@@ -6,6 +6,12 @@
         <!--<item name=”colorPrimary”>@color/my_awesome_color</item>-->
         <item name="colorPrimary">@color/blue_1</item>
         <item name="colorPrimaryDark">@color/blue_2</item>
+        <item name="searchViewStyle">@style/searchStyle</item>
+    </style>
+
+    <style name="searchStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@null</item>
+        <item name="searchHintIcon">@null</item>
     </style>
 
     <style name="editTextStyle" parent="@android:style/TextAppearance">
