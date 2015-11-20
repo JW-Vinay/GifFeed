@@ -1,15 +1,14 @@
 package com.giffedup.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.giffedup.R;
 import com.giffedup.model.Content;
 import com.giffedup.model.ImageConfigurationModel;
@@ -29,7 +28,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     public GridAdapter(Context context, List<? extends Content> items) {
         mContext = context;
-        mItems   = items;
+        mItems = items;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -44,13 +43,18 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ImageConfigurationModel  imageConfigurationModel = mItems.get(position).getDownsizedImage();
-        Uri uri = Uri.parse(imageConfigurationModel.getUrl());
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setAutoPlayAnimations(true)
-                .build();
-        holder.mImageView.setController(controller);
+        ImageConfigurationModel imageConfigurationModel = mItems.get(position).getDownsizedImage();
+        Glide.with(mContext)
+                .load(imageConfigurationModel.getUrl())
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .placeholder(R.drawable.ic_home)
+                .into(holder.mImageView);
+//        Uri uri = Uri.parse(imageConfigurationModel.getUrl());
+//        DraweeController controller = Fresco.newDraweeControllerBuilder()
+//                .setUri(uri)
+//                .setAutoPlayAnimations(true)
+//                .build();
+//        holder.mImageView.setController(controller);
     }
 
     @Override
@@ -63,20 +67,21 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         return mItems.size();
     }
 
-     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private SimpleDraweeView mImageView;
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private ImageView mImageView;
+
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            mImageView = (SimpleDraweeView) itemView.findViewById(R.id.imageview);
+            mImageView = (ImageView) itemView.findViewById(R.id.imageview);
         }
 
-         @Override
-         public void onClick(View v) {
-             if(mItemClickListener != null)
+        @Override
+        public void onClick(View v) {
+            if (mItemClickListener != null)
                 mItemClickListener.onClick(v, getAdapterPosition());
-         }
-     }
+        }
+    }
 
     public void setOnItemClicklistener(ItemClickListener itemClicklistener) {
         this.mItemClickListener = itemClicklistener;

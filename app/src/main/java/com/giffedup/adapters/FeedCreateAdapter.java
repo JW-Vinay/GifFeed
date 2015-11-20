@@ -1,7 +1,6 @@
 package com.giffedup.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,10 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.giffedup.R;
 import com.giffedup.model.Content;
 import com.giffedup.model.FeedModel;
@@ -68,12 +67,17 @@ public class FeedCreateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             ViewHolder viewHolder = (ViewHolder) holder;
             if (mFeeds.get(position).getmContent() != null) {
-                Uri uri = Uri.parse(mFeeds.get(position).getmContent().getOriginalImage().getUrl());
-                DraweeController controller = Fresco.newDraweeControllerBuilder()
-                        .setUri(uri)
-                        .setAutoPlayAnimations(true)
-                        .build();
-                viewHolder.mImageView.setController(controller);
+                Glide.with(mContext)
+                        .load(mFeeds.get(position).getmContent().getOriginalImage().getUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .placeholder(R.drawable.plc_image)
+                        .into(viewHolder.mImageView);
+//                Uri uri = Uri.parse(mFeeds.get(position).getmContent().getOriginalImage().getUrl());
+//                DraweeController controller = Fresco.newDraweeControllerBuilder()
+//                        .setUri(uri)
+//                        .setAutoPlayAnimations(true)
+//                        .build();
+//                viewHolder.mImageView.setController(controller);
             } else
                 viewHolder.mImageView.setImageResource(R.drawable.def_bg);
 
@@ -122,12 +126,12 @@ public class FeedCreateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private SimpleDraweeView mImageView;
+        private ImageView mImageView;
         private EditText mTitleEdt;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mImageView = (SimpleDraweeView) itemView.findViewById(R.id.gifImageView);
+            mImageView = (ImageView) itemView.findViewById(R.id.gifImageView);
             mTitleEdt = (EditText) itemView.findViewById(R.id.captionEditText);
             mImageView.setOnClickListener(this);
             mTitleEdt.addTextChangedListener(new TextWatcher() {
@@ -138,8 +142,6 @@ public class FeedCreateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                    if (mEdtTextWatcher != null)
-//                        mEdtTextWatcher.onTextChanged(mTitleEdt, s.toString(), getAdapterPosition());
                     mFeeds.get(getAdapterPosition()).setmTitle(s.toString());
                 }
 

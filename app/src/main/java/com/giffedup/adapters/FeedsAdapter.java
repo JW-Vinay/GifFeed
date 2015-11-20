@@ -1,7 +1,6 @@
 package com.giffedup.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.giffedup.R;
 import com.giffedup.model.FeedModel;
 import com.giffedup.model.StoryModel;
 import com.giffedup.utils.ItemClickListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -71,20 +68,21 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
             viewHolder.mStoryTextview.setText(mStoryModel.getTitle());
-            Picasso.with(mContext)
-                    .load(mStoryModel.getDownsizedStill().getUrl())
-                    .placeholder(R.drawable.ic_home)
-                    .into(viewHolder.mStoryImageView);
-        }else {
-            FeedsHolder feedsHolder = (FeedsHolder)holder;
-            FeedModel model = mFeeds.get(position-1);
+        } else {
+            FeedsHolder feedsHolder = (FeedsHolder) holder;
+            FeedModel model = mFeeds.get(position - 1);
             if (model.getmContent() != null) {
-                Uri uri = Uri.parse(model.getmContent().getOriginalImage().getUrl());
-                DraweeController controller = Fresco.newDraweeControllerBuilder()
-                        .setUri(uri)
-                        .setAutoPlayAnimations(true)
-                        .build();
-                feedsHolder.mImageView.setController(controller);
+                Glide.with(mContext)
+                        .load(model.getmContent().getOriginalImage().getUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .placeholder(R.drawable.plc_image)
+                        .into(feedsHolder.mImageView);
+//                Uri uri = Uri.parse(model.getmContent().getOriginalImage().getUrl());
+//                DraweeController controller = Fresco.newDraweeControllerBuilder()
+//                        .setUri(uri)
+//                        .setAutoPlayAnimations(true)
+//                        .build();
+//                feedsHolder.mImageView.setController(controller);
             } else
                 feedsHolder.mImageView.setImageResource(R.drawable.def_bg);
 
@@ -102,29 +100,29 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mStoryTextview;
-        private ImageView mStoryImageView;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
             mStoryTextview = (TextView) itemView.findViewById(R.id.captionTextView);
-            mStoryImageView = (ImageView) itemView.findViewById(R.id.imageView);
         }
     }
 
     class FeedsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView mTitle;
-        SimpleDraweeView mImageView;
+        //        SimpleDraweeView mImageView;
+        ImageView mImageView;
+
         public FeedsHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mTitle = (TextView) itemView.findViewById(R.id.captionTextView);
-            mImageView = (SimpleDraweeView) itemView.findViewById(R.id.gifImageView);
+            mImageView = (ImageView) itemView.findViewById(R.id.gifImageView);
 
         }
 
         @Override
         public void onClick(View v) {
-            if(itemClickListener != null)
+            if (itemClickListener != null)
                 itemClickListener.onClick(v, getAdapterPosition());
         }
     }
