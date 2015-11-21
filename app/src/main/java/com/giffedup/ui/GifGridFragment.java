@@ -106,7 +106,7 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
 
     private void checkAndSetAdapters() {
         if(mGridAdapter == null && mGifList != null) {
-            mGridAdapter = new GridAdapter(getActivity(), mGifList);
+            mGridAdapter = new GridAdapter(mGifList);
             mGridAdapter.setOnItemClicklistener(this);
             mGridView.setAdapter(mGridAdapter);
         }

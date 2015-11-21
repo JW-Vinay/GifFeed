@@ -21,21 +21,18 @@ import java.util.List;
  */
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
-    private Context mContext;
     private List<? extends Content> mItems;
-    private LayoutInflater mLayoutInflater;
     private ItemClickListener mItemClickListener;
 
-    public GridAdapter(Context context, List<? extends Content> items) {
-        mContext = context;
+    public GridAdapter(List<? extends Content> items) {
         mItems = items;
-        mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View v = mLayoutInflater.inflate(R.layout.grid_item, parent, false);
+        LayoutInflater layoutInflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = layoutInflater.inflate(R.layout.grid_item, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
@@ -43,8 +40,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ImageConfigurationModel imageConfigurationModel = mItems.get(position).getDownsizedImage();
-        Glide.with(mContext)
+        ImageConfigurationModel imageConfigurationModel = mItems.get(position).getSmallImage();
+        Glide.with(holder.itemView.getContext())
                 .load(imageConfigurationModel.getUrl())
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .placeholder(R.drawable.ic_home)

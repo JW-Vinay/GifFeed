@@ -94,7 +94,7 @@ public class StickersFragment extends Fragment implements ItemClickListener {
 
     private void checkAndSetAdapters() {
         if(mGridAdapter == null && mStickerList != null) {
-            mGridAdapter = new GridAdapter(getActivity(), mStickerList);
+            mGridAdapter = new GridAdapter(mStickerList);
             mGridAdapter.setOnItemClicklistener(this);
             mGridView.setAdapter(mGridAdapter);
         }

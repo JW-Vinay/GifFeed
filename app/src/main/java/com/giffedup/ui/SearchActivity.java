@@ -128,7 +128,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
 
     private void checkAndSetAdapters() {
         if (mGridAdapter == null && mList != null) {
-            mGridAdapter = new GridAdapter(this, mList);
+            mGridAdapter = new GridAdapter(mList);
             mGridAdapter.setOnItemClicklistener(this);
             mGridView.setAdapter(mGridAdapter);
         } else if (mGridAdapter != null) {

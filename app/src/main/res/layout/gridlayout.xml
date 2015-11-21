@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
 
     <android.support.v7.widget.RecyclerView
@@ -11,23 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/addBtn"
-        android:scrollbars="vertical"
-        android:scrollbarStyle="insideOverlay"
-        android:fadeScrollbars="true"
         android:background="@android:color/transparent"
-        />
+        android:fadeScrollbars="true"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical" />
 
     <Button
         android:id="@+id/addBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="5dp"
-        android:text="@string/action_add"
-        android:background="@drawable/btn_selector"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/btn_selector"
         android:gravity="center"
-        android:visibility="gone"/>
+        android:padding="5dp"
+        android:text="@string/action_add"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
 </RelativeLayout>

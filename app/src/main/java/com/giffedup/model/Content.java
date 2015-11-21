@@ -225,7 +225,7 @@ public class Content implements Parcelable {
         @SerializedName("original")
         private ImageConfigurationModel mOriginal;
 
-        @SerializedName("fixed_width_downsampled")
+        @SerializedName("fixed_width_small")
         private ImageConfigurationModel mSmall;
 
         public Images() {
