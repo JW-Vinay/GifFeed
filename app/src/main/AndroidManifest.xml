@@ -28,7 +28,6 @@
 
         <activity
             android:name=".ui.StoryListActivity"
-            android:exported="false"
             android:screenOrientation="portrait">
 
             <intent-filter>
