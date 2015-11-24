@@ -38,12 +38,19 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
     private List<FeedModel> mFeeds;
     private FeedsAdapter mAdapter;
     private StoryModel mStoryModel;
-    private NativeAdsManager listNativeAdsManager;
+    private NativeAdsManager mNativeAdsManager;
+    private NativeAd mAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.feeds_list);
+
+//        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
+        mNativeAdsManager = new NativeAdsManager(this, "1015153831849777_1032393410125819", 10);
+        mNativeAdsManager.setListener(this);
+        mNativeAdsManager.loadAds();
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mListView = (RecyclerView) findViewById(R.id.recyclerview);
         mListView.setHasFixedSize(true);
@@ -53,14 +60,10 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
         mListView.setItemAnimator(new DefaultItemAnimator());
         setUpToolbar();
 
-        listNativeAdsManager = new NativeAdsManager(this, "1015153831849777_1032392983459195", 2);
-        listNativeAdsManager.setListener(this);
-        listNativeAdsManager.loadAds();
-
-        if(getIntent().getExtras() != null) {
+        if (getIntent().getExtras() != null) {
             mStoryModel = (StoryModel) getIntent().getExtras().getParcelable("content");
             fetchFeeds();
-        }else {
+        } else {
             System.exit(1);
         }
 
@@ -84,8 +87,8 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
                         Content content = new Content(obj.getParseObject("content"));
                         FeedModel feedModel = new FeedModel(title, content);
                         mFeeds.add(feedModel);
-                        checkAndSetAdapters();
                     }
+                    checkAndSetAdapters();
                 } else
                     e.printStackTrace();
             }
@@ -102,19 +105,18 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        checkAndSetAdapters();
     }
 
     private void checkAndSetAdapters() {
-        if(mAdapter == null && mFeeds != null) {
-            mAdapter = new FeedsAdapter(this, mStoryModel, mFeeds);
+        if (mAdapter == null && mFeeds != null) {
+            mAdapter = new FeedsAdapter(this, mStoryModel, mFeeds, mAd);
 //            mAdapter.setOnItemClicklistener(this);
             mListView.setAdapter(mAdapter);
-        }
-        else if(mAdapter != null) {
+        } else if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -128,7 +130,7 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
 
     @Override
     public void onError(Ad ad, AdError adError) {
-        Toast.makeText(this, "Ad failed to load: " +  adError.getErrorMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Ad failed to load: " + adError.getErrorMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -143,14 +145,21 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
 
     @Override
     public void onAdsLoaded() {
-        NativeAd ad = this.listNativeAdsManager.nextNativeAd();
-        ad.setAdListener(this);
-        mAdapter.addNativeAd(ad);
+        mAd = this.mNativeAdsManager.nextNativeAd();
+        if (mAd == null) {
+            mNativeAdsManager.loadAds();
+            return;
+        }
+
+//        System.out.print("Is Available" + ad.getId());
+        mAd.setAdListener(this);
+        if (mAdapter != null)
+            mAdapter.adNativeAd(mAd);
     }
 
     @Override
     public void onAdError(AdError adError) {
-        Toast.makeText(this, "Native ads manager failed to load: " +  adError.getErrorMessage(),
+        Toast.makeText(this, "Native ads manager failed to load: " + adError.getErrorCode(),
                 Toast.LENGTH_SHORT).show();
     }
 }

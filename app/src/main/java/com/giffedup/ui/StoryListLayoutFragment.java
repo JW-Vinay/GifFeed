@@ -12,6 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
 import com.giffedup.R;
 import com.giffedup.adapters.StoryListAdapter;
 import com.giffedup.model.ImageConfigurationModel;
@@ -24,8 +29,6 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.facebook.ads.*; //fb native ads
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,7 +112,7 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
         adView = new AdView(getActivity(), "1015153831849777_1032392983459195", AdSize.BANNER_320_50);
         adViewContainer.addView(adView);
         //AdSettings.addTestDevice("babaed38fb5e3953285e6eff31a23308");
-        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
+//        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
         adView.loadAd();
         recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerview_story_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -122,14 +125,7 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
 
     }
 
-    //    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
     private void checkAndSetAdapters() {
-        Log.d("Adapters", "inside set and get adapter " + storyList.size());
         if (adapter == null && storyList != null) {
             adapter = new StoryListAdapter(getActivity(), storyList);
             adapter.setOnItemClicklistener(this);

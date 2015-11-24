@@ -73,3 +73,6 @@
 
 #searchview
 -keep class android.support.v7.widget.SearchView { *; }
+
+-keep class com.facebook.** { *; }
+-keep class com.facebook.ads.** { *; }

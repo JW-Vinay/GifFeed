@@ -1,28 +1,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.giffedup.ui.StoryListLayoutFragment">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <!--<TextView android:layout_width="match_parent" android:layout_height="match_parent"-->
-        <!--android:text="@string/hello_blank_fragment" />-->
     <RelativeLayout
         android:id="@+id/adViewContainer"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#000000"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#000000" />
 
     <android.support.v7.widget.RecyclerView
-        android:layout_below="@+id/adViewContainer"
         android:id="@+id/recyclerview_story_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_above="@+id/addBtn"
-        android:scrollbars="vertical"
-        android:scrollbarStyle="insideOverlay"
-        android:fadeScrollbars="true"
+        android:layout_below="@+id/adViewContainer"
+        android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
-        />
+        android:fadeScrollbars="true"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical" />
 
 </RelativeLayout>
