@@ -15,7 +15,10 @@
         <item>Sticker</item>
     </string-array>
     <string name="title_activity_story_list">StoryListActivity</string>
+    <string name="icon_desc">Ad icon</string>
+    <string name="image_desc">Ad image</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.giffedup.R;
 import com.giffedup.adapters.StoryListAdapter;
@@ -24,6 +25,7 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.facebook.ads.*; //fb native ads
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,12 +34,14 @@ import java.util.List;
  * Use the {@link StoryListLayoutFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StoryListLayoutFragment extends Fragment implements ItemClickListener {
+public class StoryListLayoutFragment extends Fragment implements ItemClickListener, AdListener {
 
     //    private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private StoryListAdapter adapter;
     private List<StoryModel> storyList;
+
+    private AdView adView;
 
     // TODO: Rename and change types and number of parameters
     public static StoryListLayoutFragment newInstance() {
@@ -99,7 +103,14 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View layout = inflater.inflate(R.layout.fragment_story_list_layout, container, false);
+        RelativeLayout adViewContainer = (RelativeLayout) layout.findViewById(R.id.adViewContainer);
+        adView = new AdView(getActivity(), "1015153831849777_1032392983459195", AdSize.BANNER_320_50);
+        adViewContainer.addView(adView);
+        //AdSettings.addTestDevice("babaed38fb5e3953285e6eff31a23308");
+        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
+        adView.loadAd();
         recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerview_story_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return layout;
@@ -163,6 +174,29 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
         Intent intent = new Intent(getActivity(), FeedsListActivity.class);
         intent.putExtra("content", storyList.get(position));
         startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        adView.destroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onError(Ad ad, AdError adError) {
+        if (ad == adView) {
+            Log.d("FAIL", adError.getErrorMessage());
+        }
+    }
+
+    @Override
+    public void onAdLoaded(Ad ad) {
+
+    }
+
+    @Override
+    public void onAdClicked(Ad ad) {
+
     }
 
 }

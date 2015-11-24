@@ -9,11 +9,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.giffedup.R;
 import com.giffedup.adapters.TabsPagerAdapter;
 import com.giffedup.utils.Constants;
+
+import com.facebook.ads.*; //fb native ads
 
 public class StoryListActivity extends AppCompatActivity {
 
@@ -23,6 +27,8 @@ public class StoryListActivity extends AppCompatActivity {
     private TabsPagerAdapter mTabsPagerAdapter;
     FloatingActionButton fab;
 
+    //private NativeAd nativeAd; //fb native ads
+    //private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,15 @@ public class StoryListActivity extends AppCompatActivity {
             }
         });
         addBaseFragment();
+
+//        RelativeLayout adViewContainer = (RelativeLayout) findViewById(R.id.adViewContainer);
+//
+//        adView = new AdView(this, "1015153831849777_1032392983459195", AdSize.BANNER_320_50);
+//        adViewContainer.addView(adView);
+//        //AdSettings.addTestDevice("babaed38fb5e3953285e6eff31a23308");
+//        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
+//        adView.loadAd();
+
     }
 
     private void setUpToolbar() {
@@ -79,5 +94,51 @@ public class StoryListActivity extends AppCompatActivity {
             }
         }
     }
+
+//    @Override
+//    protected void onDestroy() {
+//        adView.destroy();
+//        super.onDestroy();
+//    }
+//
+//    @Override
+//    public void onError(Ad ad, AdError adError) {
+//        if (ad == adView) {
+//            Log.d("FAIL", adError.getErrorMessage());
+//        }
+//    }
+//
+//    @Override
+//    public void onAdLoaded(Ad ad) {
+//
+//    }
+//
+//    @Override
+//    public void onAdClicked(Ad ad) {
+//
+//    }
+
+//    private void showNativeAd(){ //fb native add function
+//        nativeAd = new NativeAd(this, "1015153831849777_1032392983459195");
+//        nativeAd.setAdListener(new AdListener() {
+//
+//            @Override
+//            public void onError(Ad ad, AdError error) {
+//
+//            }
+//
+//            @Override
+//            public void onAdLoaded(Ad ad) {
+//
+//            }
+//
+//            @Override
+//            public void onAdClicked(Ad ad) {
+//
+//            }
+//        });
+//
+//        nativeAd.loadAd();
+//    }
 
 }
