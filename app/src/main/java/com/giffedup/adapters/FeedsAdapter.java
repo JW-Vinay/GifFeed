@@ -133,7 +133,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Glide.with(mContext)
                         .load(model.getmContent().getOriginalImage().getUrl())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .placeholder(R.drawable.plc_image)
+                        .placeholder(R.drawable.gif_default)
                         .into(feedsHolder.mImageView);
 //                Uri uri = Uri.parse(model.getmContent().getOriginalImage().getUrl());
 //                DraweeController controller = Fresco.newDraweeControllerBuilder()

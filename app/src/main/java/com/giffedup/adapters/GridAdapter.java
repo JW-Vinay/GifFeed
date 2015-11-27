@@ -44,7 +44,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         Glide.with(holder.itemView.getContext())
                 .load(imageConfigurationModel.getUrl())
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .placeholder(R.drawable.ic_home)
+                .placeholder(R.drawable.gif_default)
                 .into(holder.mImageView);
 //        Uri uri = Uri.parse(imageConfigurationModel.getUrl());
 //        DraweeController controller = Fresco.newDraweeControllerBuilder()
