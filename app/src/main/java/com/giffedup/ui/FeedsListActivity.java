@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSettings;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdsManager;
 import com.giffedup.R;
@@ -40,13 +41,14 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
     private StoryModel mStoryModel;
     private NativeAdsManager mNativeAdsManager;
     private NativeAd mAd;
+//    private List<NativeAd> mAds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.feeds_list);
 
-//        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
+        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
         mNativeAdsManager = new NativeAdsManager(this, "1015153831849777_1032393410125819", 10);
         mNativeAdsManager.setListener(this);
         mNativeAdsManager.loadAds();
@@ -113,7 +115,7 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
 
     private void checkAndSetAdapters() {
         if (mAdapter == null && mFeeds != null) {
-            mAdapter = new FeedsAdapter(this, mStoryModel, mFeeds, mAd);
+            mAdapter = new FeedsAdapter(this, mStoryModel, mFeeds, mAd, mNativeAdsManager);
 //            mAdapter.setOnItemClicklistener(this);
             mListView.setAdapter(mAdapter);
         } else if (mAdapter != null) {
@@ -145,16 +147,16 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
 
     @Override
     public void onAdsLoaded() {
-        mAd = this.mNativeAdsManager.nextNativeAd();
-        if (mAd == null) {
-            mNativeAdsManager.loadAds();
-            return;
-        }
-
-//        System.out.print("Is Available" + ad.getId());
-        mAd.setAdListener(this);
-        if (mAdapter != null)
-            mAdapter.adNativeAd(mAd);
+//        mAd = this.mNativeAdsManager.nextNativeAd();
+//        if (mAd == null) {
+//            mNativeAdsManager.loadAds();
+//            return;
+//        }
+//        mAd.setAdListener(this);
+//        mAds.add(mAd);
+//
+//        if (mAdapter != null)
+//            mAdapter.adNativeAd(mAd);
     }
 
     @Override

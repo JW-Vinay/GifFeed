@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdsManager;
 import com.giffedup.R;
 import com.giffedup.model.FeedModel;
 import com.giffedup.model.StoryModel;
@@ -43,14 +44,16 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private NativeAd ad;
     private int mAdCount = 0;
+    private NativeAdsManager mNativeAdsManager;
 
-    public FeedsAdapter(Context context, StoryModel model, List<FeedModel> feeds, NativeAd ad) {
+    public FeedsAdapter(Context context, StoryModel model, List<FeedModel> feeds, NativeAd ad, NativeAdsManager nativeAdsManager) {
         this.mContext = context;
         this.mFeeds = feeds;
         this.mStoryModel = model;
         this.ad = ad;
         mInflater = LayoutInflater.from(context);
         mAdCount = mFeeds.size() / 3;
+        this.mNativeAdsManager = nativeAdsManager;
     }
 
     @Override
@@ -101,10 +104,10 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             // Clean up the old ad before inserting the new one
             this.ad.unregisterView();
             this.ad = null;
-            this.notifyDataSetChanged();
+//            this.notifyDataSetChanged();
         }
         this.ad = ad;
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
     }
 
     @Override
@@ -115,15 +118,17 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             viewHolder.mStoryTextview.setText(mStoryModel.getTitle());
         } else if (holder instanceof AdViewHolder) {
             AdViewHolder viewHolder = (AdViewHolder) holder;
-            if (ad != null) {
+            NativeAd ad = mNativeAdsManager.nextNativeAd();
+            if(ad == null)
+                   mNativeAdsManager.loadAds();
+            else if (ad != null) {
+                adNativeAd(ad);
                 viewHolder.nativeAdSocialContext.setText(ad.getAdSocialContext());
                 viewHolder.nativeAdCallToAction.setText(ad.getAdCallToAction());
                 viewHolder.nativeAdCallToAction.setVisibility(View.VISIBLE);
                 viewHolder.nativeAdTitle.setText(ad.getAdTitle());
                 viewHolder.nativeAdBody.setText(ad.getAdBody());
-                viewHolder.inflateAd();
-            } else {
-                //TODO: Show empty view
+                viewHolder.inflateAd(ad);
             }
         } else {
             FeedsHolder feedsHolder = (FeedsHolder) holder;
@@ -226,7 +231,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         }
 
-        public void inflateAd() {
+        public void inflateAd(NativeAd ad) {
 
             Context context = mParentView.getContext();
             // Downloading and setting the ad icon.
