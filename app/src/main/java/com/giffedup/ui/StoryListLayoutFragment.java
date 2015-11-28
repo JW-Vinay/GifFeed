@@ -61,6 +61,7 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
         if (storyList == null || storyList.isEmpty()) {
             storyList = new ArrayList<StoryModel>();
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Story");
+            query.addDescendingOrder("createdAt");
             query.include("smallImage");
             query.include("downSized");
             query.include("downsizedStill");

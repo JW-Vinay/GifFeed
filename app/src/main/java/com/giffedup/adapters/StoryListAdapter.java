@@ -50,7 +50,7 @@ public class StoryListAdapter extends RecyclerView.Adapter<StoryListAdapter.Stor
         //holder.icon.setImageResource(uri);
         Picasso.with(context)
                 .load(uri)
-                .placeholder(R.drawable.ic_home)
+                .placeholder(R.drawable.gif_default)
                 .into(holder.icon);
     }
 
