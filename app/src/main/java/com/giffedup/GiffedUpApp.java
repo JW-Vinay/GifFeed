@@ -2,6 +2,7 @@ package com.giffedup;
 
 import android.app.Application;
 
+import com.flurry.android.FlurryAgent;
 import com.parse.Parse;
 
 /**
@@ -14,6 +15,7 @@ public class GiffedUpApp extends Application {
         super.onCreate();
         ApplicationData.getInstance().init(this);
 //        Fresco.initialize(this);
+        FlurryAgent.init(this, "5CCXRDTXTMZDTSTMPN8K");
         Parse.initialize(this, "SnXKOhUUDEQ64ibzttzu5qWPDXBOwSfzTl4afVHF", "Dlr8mAK6QHoydGNjuIAIAZrdLKunO6FBa4MfTuZk");
 
 //        ParseQuery<ParseObject> query = ParseQuery.getQuery("Story");
