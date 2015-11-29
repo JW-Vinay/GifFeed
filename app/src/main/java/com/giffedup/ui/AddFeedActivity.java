@@ -8,12 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.giffedup.R;
 import com.giffedup.utils.Constants;
+import com.giffedup.utils.DialogClickListener;
+import com.giffedup.utils.DialogUtils;
 import com.giffedup.utils.FragmentCommunicationInterface;
 
-public class AddFeedActivity extends AppCompatActivity implements FragmentCommunicationInterface {
+public class AddFeedActivity extends AppCompatActivity implements FragmentCommunicationInterface, DialogClickListener {
 
     private Toolbar mToolbar;
 
@@ -56,20 +59,47 @@ public class AddFeedActivity extends AppCompatActivity implements FragmentCommun
 
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
-                setResult(RESULT_CANCELED);
+                showDiscardDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    public void showDiscardDialog() {
+        try {
+            DialogUtils.showDialog(this, R.string.title_confirm_discard, R.string.discard_confirm, R.string.btn_discard, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        showDiscardDialog();
+    }
+
     @Override
     public void sendMessage(Bundle bundle) {
 
-        if(bundle != null) {
+        if (bundle != null) {
             int message = bundle.getInt("finish", Activity.RESULT_CANCELED);
+            if (message == RESULT_OK)
+                Toast.makeText(this, R.string.story_published_msg, Toast.LENGTH_SHORT).show();
             setResult(message);
             finish();
         }
     }
+
+    @Override
+    public void onPositiveBtnClick() {
+        finish();
+        setResult(RESULT_CANCELED);
+    }
+
+    @Override
+    public void onNegativeBtnClick() {
+
+    }
+
+
 }

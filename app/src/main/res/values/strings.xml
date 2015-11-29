@@ -18,7 +18,15 @@
     <string name="icon_desc">Ad icon</string>
     <string name="image_desc">Ad image</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="empty_query">Invalid Search Query!</string>
+    <string name="empty_search_results">Aww! snap we have no results for this!</string>
+    <string name="title_confirm_publish">Confirm Publish</string>
+    <string name="title_confirm_discard">Confirm Discard</string>
+    <string name="publish_confirm_msg">Publish story to your feed?</string>
+    <string name="story_published_msg">Story successfully published to feed!</string>
+    <string name="discard_confirm">Discard your story?</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_discard">Discard</string>
 </resources>

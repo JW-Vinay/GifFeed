@@ -115,7 +115,7 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
 
     private void checkAndSetAdapters() {
         if (mAdapter == null && mFeeds != null) {
-            mAdapter = new FeedsAdapter(this, mStoryModel, mFeeds, mAd, mNativeAdsManager);
+            mAdapter = new FeedsAdapter(mStoryModel, mFeeds,mNativeAdsManager);
 //            mAdapter.setOnItemClicklistener(this);
             mListView.setAdapter(mAdapter);
         } else if (mAdapter != null) {

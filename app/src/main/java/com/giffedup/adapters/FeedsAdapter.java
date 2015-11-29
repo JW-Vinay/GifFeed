@@ -30,8 +30,6 @@ import java.util.List;
  */
 public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context mContext;
-    private LayoutInflater mInflater;
     private List<FeedModel> mFeeds;
 
     private List<NativeAd> mAd;
@@ -42,35 +40,34 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private int TYPE_AD = 1;
     private int TYPE_ITEM = 2;
 
-    private NativeAd ad;
+//    private NativeAd ad;
     private int mAdCount = 0;
     private NativeAdsManager mNativeAdsManager;
 
-    public FeedsAdapter(Context context, StoryModel model, List<FeedModel> feeds, NativeAd ad, NativeAdsManager nativeAdsManager) {
-        this.mContext = context;
+    public FeedsAdapter(StoryModel model, List<FeedModel> feeds, NativeAdsManager nativeAdsManager) {
         this.mFeeds = feeds;
         this.mStoryModel = model;
-        this.ad = ad;
-        mInflater = LayoutInflater.from(context);
         mAdCount = mFeeds.size() / 3;
         this.mNativeAdsManager = nativeAdsManager;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (viewType == TYPE_HEADER) {
 
-            View v = mInflater.inflate(R.layout.feeds_caption_view, parent, false);
+            View v = inflater.inflate(R.layout.feeds_caption_view, parent, false);
             HeaderViewHolder headerViewHolder = new HeaderViewHolder(v);
             return headerViewHolder;
 
         } else if (viewType == TYPE_AD) {
-            View v = mInflater.inflate(R.layout.ad_unit, parent, false);
+            View v = inflater.inflate(R.layout.ad_unit, parent, false);
             AdViewHolder adViewHolder = new AdViewHolder(v);
             return adViewHolder;
         } else {
 
-            View view = mInflater.inflate(R.layout.feeds_item, parent, false);
+            View view = inflater.inflate(R.layout.feeds_item, parent, false);
             FeedsHolder holder = new FeedsHolder(view);
             return holder;
         }
@@ -100,13 +97,13 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (ad == null) {
             return;
         }
-        if (this.ad != null) {
-            // Clean up the old ad before inserting the new one
-            this.ad.unregisterView();
-            this.ad = null;
-//            this.notifyDataSetChanged();
-        }
-        this.ad = ad;
+//        if (this.ad != null) {
+//            // Clean up the old ad before inserting the new one
+//            this.ad.unregisterView();
+//            this.ad = null;
+////            this.notifyDataSetChanged();
+//        }
+//        this.ad = ad;
 //        notifyDataSetChanged();
     }
 
@@ -135,7 +132,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //            FeedModel model = mFeeds.get(position - 2);
             FeedModel model = getFeed(position);
             if (model.getmContent() != null) {
-                Glide.with(mContext)
+                Glide.with(feedsHolder.mImageView.getContext())
                         .load(model.getmContent().getOriginalImage().getUrl())
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .placeholder(R.drawable.gif_default)

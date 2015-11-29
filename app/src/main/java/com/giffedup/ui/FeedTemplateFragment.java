@@ -19,6 +19,8 @@ import com.giffedup.adapters.FeedCreateAdapter;
 import com.giffedup.model.Content;
 import com.giffedup.model.FeedModel;
 import com.giffedup.utils.Constants;
+import com.giffedup.utils.DialogClickListener;
+import com.giffedup.utils.DialogUtils;
 import com.giffedup.utils.EdtTextWatcher;
 import com.giffedup.utils.FragmentCommunicationInterface;
 import com.giffedup.utils.ItemClickListener;
@@ -32,7 +34,7 @@ import java.util.List;
 /**
  * Created by vinay-r on 8/12/15.
  */
-public class FeedTemplateFragment extends Fragment {
+public class FeedTemplateFragment extends Fragment implements DialogClickListener {
 
     private RecyclerView mListView;
     private FeedCreateAdapter mAdapter;
@@ -48,12 +50,11 @@ public class FeedTemplateFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mFragmentCommunicationInterface = (FragmentCommunicationInterface)activity;
-        }catch (ClassCastException e) {
+            mFragmentCommunicationInterface = (FragmentCommunicationInterface) activity;
+        } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement Communication Interface");
         }
-
 
 
     }
@@ -109,11 +110,12 @@ public class FeedTemplateFragment extends Fragment {
                 //Save Current Feed
                 mFeeds.add(new FeedModel());
                 mAdapter.notifyDataSetChanged();
-                mListView.smoothScrollToPosition(mFeeds.size()-1);
+                mListView.smoothScrollToPosition(mFeeds.size() - 1);
             }
         });
         return view;
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -128,7 +130,12 @@ public class FeedTemplateFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                generateParseObjects();
+                try {
+                    DialogUtils.showDialog(getActivity(), R.string.title_confirm_publish, R.string.publish_confirm_msg, R.string.btn_confirm,this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+//                generateParseObjects();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -145,12 +152,11 @@ public class FeedTemplateFragment extends Fragment {
         storyObject.put("original", mFeeds.get(1).getmContent().getOriginalImage().createParseObject());
 
 
-
         storyObject.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
 
-                if(e != null)
+                if (e != null)
                     e.printStackTrace();
                 else {
 
@@ -171,10 +177,9 @@ public class FeedTemplateFragment extends Fragment {
                             ParseObject.saveAllInBackground(parseObjectList, new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    if(e != null)
+                                    if (e != null)
                                         e.printStackTrace();
-                                    else
-                                    {
+                                    else {
                                         Bundle bundle = new Bundle();
                                         bundle.putInt("finish", Activity.RESULT_OK);
                                         mFragmentCommunicationInterface.sendMessage(bundle);
@@ -198,6 +203,7 @@ public class FeedTemplateFragment extends Fragment {
 //        });
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -207,5 +213,15 @@ public class FeedTemplateFragment extends Fragment {
             mAdapter.updateItem(content, mSelectedPosition);
             mSelectedPosition = -1;
         }
+    }
+
+    @Override
+    public void onPositiveBtnClick() {
+        generateParseObjects();
+    }
+
+    @Override
+    public void onNegativeBtnClick() {
+
     }
 }

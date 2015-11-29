@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.giffedup.ApplicationData;
 import com.giffedup.R;
@@ -43,6 +45,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
     private RecyclerView mGridView;
     private RestClient mRestClient;
     private GridAdapter mGridAdapter;
+    private TextView mEmptyTextView;
     private StaggeredGridLayoutManager mLayoutManager;
     private SearchView mSearchView;
     private List<Content> mList;
@@ -54,6 +57,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
         mRestClient = ApplicationData.getInstance().getRestClient();
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mGridView = (RecyclerView) findViewById(R.id.recyclerview);
+        mEmptyTextView = (TextView) findViewById(R.id.emptyView);
         mGridView.setHasFixedSize(true);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
@@ -63,11 +67,12 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
     }
 
     private void setUpToolbar() {
+
         setSupportActionBar(mToolbar);
         mToolbar.setTitle(R.string.app_name);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -82,7 +87,6 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
     @Override
     public void onResume() {
         super.onResume();
-        checkAndSetAdapters();
     }
 
     @Override
@@ -103,15 +107,27 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
         if (intent.getAction() == Intent.ACTION_SEARCH) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             if (!TextUtils.isEmpty(query)) {
+                clearData();
                 fetchContent(query);
+            } else {
+                Toast.makeText(this, R.string.empty_query, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void clearData() {
+        if (mList != null) {
+            mList.clear();
+            if (mGridAdapter != null)
+                mGridAdapter.notifyDataSetChanged();
+        }
+
     }
 
     private Callback<ApiResponse> mCallback = new Callback<ApiResponse>() {
         @Override
         public void success(ApiResponse apiResponse, Response response) {
-            if (mList == null || mList.isEmpty())
+            if (mList == null)
                 mList = (List<Content>) apiResponse.getContentList();
             else {
                 mList.addAll((List<Content>) apiResponse.getContentList());
@@ -127,13 +143,23 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
     };
 
     private void checkAndSetAdapters() {
-        if (mGridAdapter == null && mList != null) {
-            mGridAdapter = new GridAdapter(mList);
-            mGridAdapter.setOnItemClicklistener(this);
-            mGridView.setAdapter(mGridAdapter);
-        } else if (mGridAdapter != null) {
-            mGridAdapter.notifyDataSetChanged();
+
+        if (mList == null || mList.isEmpty()) {
+            mEmptyTextView.setVisibility(View.VISIBLE);
+            mGridView.setVisibility(View.GONE);
+        } else {
+            mEmptyTextView.setVisibility(View.GONE);
+            mGridView.setVisibility(View.VISIBLE);
+
+            if (mGridAdapter == null) {
+                mGridAdapter = new GridAdapter(mList);
+                mGridAdapter.setOnItemClicklistener(this);
+                mGridView.setAdapter(mGridAdapter);
+            } else if (mGridAdapter != null) {
+                mGridAdapter.notifyDataSetChanged();
+            }
         }
+
     }
 
     private void fetchContent(String query) {
