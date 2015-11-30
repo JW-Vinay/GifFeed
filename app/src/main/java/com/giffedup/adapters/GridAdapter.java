@@ -23,6 +23,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     private List<? extends Content> mItems;
     private ItemClickListener mItemClickListener;
+    private boolean isLoading;
 
     public GridAdapter(List<? extends Content> items) {
         mItems = items;
@@ -82,5 +83,13 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     public void setOnItemClicklistener(ItemClickListener itemClicklistener) {
         this.mItemClickListener = itemClicklistener;
+    }
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void setIsLoading(boolean isLoading) {
+        this.isLoading = isLoading;
     }
 }

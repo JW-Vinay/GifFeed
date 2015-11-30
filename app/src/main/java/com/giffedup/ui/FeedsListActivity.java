@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
-import com.facebook.ads.AdSettings;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdsManager;
 import com.giffedup.R;
@@ -48,7 +47,7 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
         super.onCreate(savedInstanceState);
         setContentView(R.layout.feeds_list);
 
-        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
+//        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
         mNativeAdsManager = new NativeAdsManager(this, "1015153831849777_1032393410125819", 10);
         mNativeAdsManager.setListener(this);
         mNativeAdsManager.loadAds();

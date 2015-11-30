@@ -49,6 +49,9 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
     private StaggeredGridLayoutManager mLayoutManager;
     private SearchView mSearchView;
     private List<Content> mList;
+    private String mQuery = "";
+    private int mGIFOffset = 0;
+    private int mStickerOffset = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,32 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
         mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         mGridView.setLayoutManager(mLayoutManager);
         mGridView.setItemAnimator(new DefaultItemAnimator());
+        mGridView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy > 0) //check for scroll down
+                {
+                    int visibleItemCount = mLayoutManager.getChildCount();
+                    int totalItemCount = mLayoutManager.getItemCount();
+                    int[] pastVisiblesItems = mLayoutManager.findFirstVisibleItemPositions(null);
+//                    System.out.println("Pos: " + pastVisiblesItems[0]  + " " + pastVisiblesItems.length);
+                    if(mGridAdapter != null && !mGridAdapter.isLoading()) {
+                        if (pastVisiblesItems.length > 0 && (visibleItemCount + pastVisiblesItems[0]) >= totalItemCount)
+                        {
+                            mGridAdapter.setIsLoading(true);
+                            //TODO: Paginate.
+                            fetchContentPaginate();
+                        }
+                    }
+                }
+            }
+        });
         setUpToolbar();
     }
 
@@ -107,8 +136,9 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
         if (intent.getAction() == Intent.ACTION_SEARCH) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             if (!TextUtils.isEmpty(query)) {
+                mQuery = query;
                 clearData();
-                fetchContent(query);
+                fetchContent();
             } else {
                 Toast.makeText(this, R.string.empty_query, Toast.LENGTH_SHORT).show();
             }
@@ -132,7 +162,14 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
             else {
                 mList.addAll((List<Content>) apiResponse.getContentList());
             }
+            if(matchUrl(response.getUrl()))
+                   mGIFOffset = apiResponse.getPages().getOffset() + apiResponse.getPages().getCount();
+            else
+                mStickerOffset = apiResponse.getPages().getOffset()+apiResponse.getPages().getCount();
+
             checkAndSetAdapters();
+            if(mGridAdapter != null)
+                mGridAdapter.setIsLoading(false);
         }
 
         @Override
@@ -142,6 +179,9 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
         }
     };
 
+    private boolean matchUrl(String url) {
+        return url.contains("v1/gifs/");
+    }
     private void checkAndSetAdapters() {
 
         if (mList == null || mList.isEmpty()) {
@@ -162,9 +202,16 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
 
     }
 
-    private void fetchContent(String query) {
-        mRestClient.getGifService().searchGIFs(query, mCallback);
-        mRestClient.getGifService().searchStickers(query, mCallback);
+    private void fetchContentPaginate() {
+        if(mGIFOffset > 0)
+            mRestClient.getGifService().searchGIFs(mQuery, mGIFOffset, mCallback);
+        if(mStickerOffset > 0)
+            mRestClient.getGifService().searchStickers(mQuery,mStickerOffset, mCallback);
+    }
+
+    private void fetchContent() {
+        mRestClient.getGifService().searchGIFs(mQuery, mCallback);
+        mRestClient.getGifService().searchStickers(mQuery, mCallback);
     }
 
     @Override
