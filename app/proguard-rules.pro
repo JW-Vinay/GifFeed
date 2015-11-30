@@ -79,7 +79,8 @@
 
 -keep class com.flurry.** { *; }
 -dontwarn com.flurry.**
--keepattributes *Annotation*,EnclosingMethod ­keepclasseswithmembers class * {
+-keepattributes *Annotation*,EnclosingMethod
+-keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
@@ -91,7 +92,9 @@
 -keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
     public static final *** NULL;
 }
--keepnames @com.google.android.gms.common.annotation.KeepName class * ­keepclassmembernames class * {
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+
+-keepclassmembernames class * {
     @com.google.android.gms.common.annotation.KeepName *;
 }
 -keepnames class * implements android.os.Parcelable {
