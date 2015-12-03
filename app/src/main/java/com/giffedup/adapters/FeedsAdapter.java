@@ -32,13 +32,12 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private List<FeedModel> mFeeds;
 
-    private List<NativeAd> mAd;
     private StoryModel mStoryModel;
     private ItemClickListener itemClickListener;
 
-    private int TYPE_HEADER = 0;
-    private int TYPE_AD = 1;
-    private int TYPE_ITEM = 2;
+    private final int TYPE_HEADER = 0;
+    private final int TYPE_AD = 1;
+    private final int TYPE_ITEM = 2;
 
 //    private NativeAd ad;
     private int mAdCount = 0;
@@ -58,18 +57,15 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (viewType == TYPE_HEADER) {
 
             View v = inflater.inflate(R.layout.feeds_caption_view, parent, false);
-            HeaderViewHolder headerViewHolder = new HeaderViewHolder(v);
-            return headerViewHolder;
+            return new HeaderViewHolder(v);
 
         } else if (viewType == TYPE_AD) {
             View v = inflater.inflate(R.layout.ad_unit, parent, false);
-            AdViewHolder adViewHolder = new AdViewHolder(v);
-            return adViewHolder;
+            return new AdViewHolder(v);
         } else {
 
             View view = inflater.inflate(R.layout.feeds_item, parent, false);
-            FeedsHolder holder = new FeedsHolder(view);
-            return holder;
+            return new FeedsHolder(view);
         }
 
     }
@@ -79,7 +75,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return false;
         else if(mAdCount == 1 && position == mFeeds.size()/2)
             return  true;
-        else if(mAdCount > 1 && position < mFeeds.size() && position % (mFeeds.size()/mAdCount) == 0)
+        else if(mAdCount > 1 && position <= mFeeds.size() && position % (mFeeds.size()/mAdCount) == 0)
             return true;
         return false;
     }
@@ -93,19 +89,19 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return TYPE_ITEM;
     }
 
-    public void adNativeAd(NativeAd ad) {
-        if (ad == null) {
-            return;
-        }
-//        if (this.ad != null) {
-//            // Clean up the old ad before inserting the new one
-//            this.ad.unregisterView();
-//            this.ad = null;
-////            this.notifyDataSetChanged();
+//    public void adNativeAd(NativeAd ad, int position) {
+//        if (ad == null) {
+//            return;
 //        }
-//        this.ad = ad;
-//        notifyDataSetChanged();
-    }
+////        if (this.ad != null) {
+////            // Clean up the old ad before inserting the new one
+////            this.ad.unregisterView();
+////            this.ad = null;
+//////            this.notifyDataSetChanged();
+////        }
+////        this.ad = ad;
+////        notifyDataSetChanged();
+//    }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -119,7 +115,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if(ad == null)
                    mNativeAdsManager.loadAds();
             else if (ad != null) {
-                adNativeAd(ad);
+//                adNativeAd(ad, position);
                 viewHolder.nativeAdSocialContext.setText(ad.getAdSocialContext());
                 viewHolder.nativeAdCallToAction.setText(ad.getAdCallToAction());
                 viewHolder.nativeAdCallToAction.setVisibility(View.VISIBLE);
@@ -129,7 +125,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         } else {
             FeedsHolder feedsHolder = (FeedsHolder) holder;
-//            FeedModel model = mFeeds.get(position - 2);
+
             FeedModel model = getFeed(position);
             if (model.getmContent() != null) {
                 Glide.with(feedsHolder.mImageView.getContext())
@@ -166,16 +162,15 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         }else if(mAdCount > 1){
             int i = mFeeds.size()/mAdCount;
+            int step = i;
             while(i<=mFeeds.size()) {
                 if(position < i)
                     break;
                 temp++;
-                i+= i;
+                i+= step;
             }
         }
-
         position = position - temp - 1;
-
         return mFeeds.get(position);
     }
 
@@ -259,10 +254,4 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             //     Arrays.asList(nativeAdCallToAction, nativeAdMedia));
         }
     }
-
-    public void setOnItemClicklistener(ItemClickListener itemClicklistener) {
-        this.itemClickListener = itemClicklistener;
-    }
-
-
 }

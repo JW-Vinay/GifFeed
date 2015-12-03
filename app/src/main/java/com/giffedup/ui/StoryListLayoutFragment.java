@@ -17,8 +17,14 @@ import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
+import com.flurry.android.FlurryAgent;
+import com.flurry.android.ads.FlurryAdErrorType;
+import com.flurry.android.ads.FlurryAdNative;
+import com.flurry.android.ads.FlurryAdNativeAsset;
+import com.flurry.android.ads.FlurryAdNativeListener;
 import com.giffedup.R;
 import com.giffedup.adapters.StoryListAdapter;
+import com.giffedup.model.FlurryDataModel;
 import com.giffedup.model.ImageConfigurationModel;
 import com.giffedup.model.StoryModel;
 import com.giffedup.utils.ItemClickListener;
@@ -39,14 +45,82 @@ import java.util.List;
  */
 public class StoryListLayoutFragment extends Fragment implements ItemClickListener, AdListener {
 
-    //    private OnFragmentInteractionListener mListener;
+    private final String AD_SPACE_NAME = "Story screen native ad";
+
+    private RelativeLayout mAdViewContainer;
     private RecyclerView recyclerView;
     private StoryListAdapter adapter;
     private List<StoryModel> storyList;
 
     private AdView adView;
+    private FlurryAdNative mNativeAd;
+    private FlurryDataModel mFlurryDataModel;
 
-    // TODO: Rename and change types and number of parameters
+    private FlurryAdNativeListener mFlurryAdNativeListener = new FlurryAdNativeListener() {
+        @Override
+        public void onFetched(FlurryAdNative flurryAdNative) {
+            FlurryAdNativeAsset headlineAsset = flurryAdNative.getAsset("headline");
+            FlurryAdNativeAsset summaryAsset = flurryAdNative.getAsset("summary");
+            FlurryAdNativeAsset sourceAsset = flurryAdNative.getAsset("source");
+            FlurryAdNativeAsset sponsoredImageUrl = flurryAdNative.getAsset("secHqBrandingLogo");
+            FlurryAdNativeAsset secHqImageAsset = flurryAdNative.getAsset("secHqImage");
+
+            mFlurryDataModel = new FlurryDataModel.Builder()
+                    .setmHeadlineText(headlineAsset)
+                    .setmSecondaryAsset(secHqImageAsset)
+                    .setmSummaryText(summaryAsset)
+                    .setmSponsorName(sourceAsset)
+                    .setmSponsoredImageUrl(sponsoredImageUrl)
+                    .setNativeAd(flurryAdNative)
+                    .build();
+
+            if(adapter != null) {
+                adapter.setmFlurryDataModel(mFlurryDataModel);
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onShowFullscreen(FlurryAdNative flurryAdNative) {
+
+        }
+
+        @Override
+        public void onCloseFullscreen(FlurryAdNative flurryAdNative) {
+
+        }
+
+        @Override
+        public void onAppExit(FlurryAdNative flurryAdNative) {
+
+        }
+
+        @Override
+        public void onClicked(FlurryAdNative flurryAdNative) {
+
+        }
+
+        @Override
+        public void onImpressionLogged(FlurryAdNative flurryAdNative) {
+
+        }
+
+        @Override
+        public void onExpanded(FlurryAdNative flurryAdNative) {
+
+        }
+
+        @Override
+        public void onCollapsed(FlurryAdNative flurryAdNative) {
+
+        }
+
+        @Override
+        public void onError(FlurryAdNative flurryAdNative, FlurryAdErrorType flurryAdErrorType, int i) {
+
+        }
+    };
+
     public static StoryListLayoutFragment newInstance() {
         StoryListLayoutFragment fragment = new StoryListLayoutFragment();
 
@@ -54,7 +128,6 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
     }
 
     public StoryListLayoutFragment() {
-        // Required empty public constructor
     }
 
     public void getStories() {
@@ -69,24 +142,21 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
             query.findInBackground(new FindCallback<ParseObject>() {
                 public void done(List<ParseObject> object, ParseException e) {
                     if (e == null) {
-//                    Log.d("stories", "Retrieved " + object.size() + " stories");
                         for (int i = 0; i < object.size(); i++) {
                             String title = object.get(i).getString("title");
                             String id = object.get(i).getObjectId();
                             String contentId = object.get(i).getString("contentId");
-//                        Log.d("Stories", title);
                             ImageConfigurationModel downSized = ImageConfigurationModel.getConfiguration(object.get(i).getParseObject("downSized"));
                             ImageConfigurationModel downsizedStill = ImageConfigurationModel.getConfiguration(object.get(i).getParseObject("downsizedStill"));
                             ImageConfigurationModel original = ImageConfigurationModel.getConfiguration(object.get(i).getParseObject("original"));
                             ImageConfigurationModel smallImage = ImageConfigurationModel.getConfiguration(object.get(i).getParseObject("smallImage"));
-//                        Log.d("Stories", smallImage.getUrl());
                             StoryModel sm = new StoryModel(id, contentId, title, downSized, downsizedStill, original, smallImage);
                             storyList.add(sm);
                         }
                         checkAndSetAdapters();
 
                     } else {
-                        Log.d("stories", "Error: " + e.getMessage());
+                        Log.e("stories", "Error: " + e.getMessage());
                     }
                 }
             });
@@ -97,27 +167,35 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View layout = inflater.inflate(R.layout.fragment_story_list_layout, container, false);
-        RelativeLayout adViewContainer = (RelativeLayout) layout.findViewById(R.id.adViewContainer);
-        adView = new AdView(getActivity(), "1015153831849777_1032392983459195", AdSize.BANNER_320_50);
-        adViewContainer.addView(adView);
-        //AdSettings.addTestDevice("babaed38fb5e3953285e6eff31a23308");
-//        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
-        adView.loadAd();
+        mAdViewContainer = (RelativeLayout) layout.findViewById(R.id.adViewContainer);
+        fbAdSetup();
+        flurryAdSetup();
+
+
         recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerview_story_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return layout;
+    }
+
+    private void flurryAdSetup() {
+        mNativeAd = new FlurryAdNative(getActivity(), AD_SPACE_NAME);
+        mNativeAd.setListener(mFlurryAdNativeListener);
+    }
+
+    private void fbAdSetup() {
+        adView = new AdView(getActivity(), "1015153831849777_1032392983459195", AdSize.BANNER_320_50);
+        mAdViewContainer.addView(adView);
+        //Test Mode for facebook
+//        AdSettings.addTestDevice("babaed38fb5e3953285e6eff31a23308");
+//        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
+        adView.loadAd();
     }
 
     @Override
@@ -126,9 +204,22 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        FlurryAgent.onStartSession(getActivity());
+        mNativeAd.fetchAd();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FlurryAgent.onEndSession(getActivity());
+    }
+
     private void checkAndSetAdapters() {
         if (adapter == null && storyList != null) {
-            adapter = new StoryListAdapter(getActivity(), storyList);
+            adapter = new StoryListAdapter(storyList, mFlurryDataModel);
             adapter.setOnItemClicklistener(this);
             recyclerView.setAdapter(adapter);
         } else if (adapter != null) {
@@ -152,18 +243,6 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-//        mListener = null;
     }
 
     @Override
@@ -176,13 +255,14 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
     @Override
     public void onDestroy() {
         adView.destroy();
+        mNativeAd.destroy();
         super.onDestroy();
     }
 
     @Override
     public void onError(Ad ad, AdError adError) {
         if (ad == adView) {
-            Log.d("FAIL", adError.getErrorMessage());
+            Log.e("FAIL", adError.getErrorMessage());
         }
     }
 

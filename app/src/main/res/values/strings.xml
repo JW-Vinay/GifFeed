@@ -31,4 +31,6 @@
     <string name="btn_discard">Discard</string>
     <string name="hint_image">Click to Add GIF</string>
     <string name="edit_image">Edit GIF</string>
+
+    <string name="sponsored">Ad</string>
 </resources>

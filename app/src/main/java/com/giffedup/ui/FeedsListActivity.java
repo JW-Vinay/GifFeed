@@ -9,9 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
-import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdsManager;
 import com.giffedup.R;
@@ -30,7 +28,7 @@ import java.util.List;
 /**
  * Created by vinayr on 10/28/15.
  */
-public class FeedsListActivity extends AppCompatActivity implements NativeAdsManager.Listener, AdListener {
+public class FeedsListActivity extends AppCompatActivity implements NativeAdsManager.Listener {
 
     private Toolbar mToolbar;
     private RecyclerView mListView;
@@ -115,7 +113,6 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
     private void checkAndSetAdapters() {
         if (mAdapter == null && mFeeds != null) {
             mAdapter = new FeedsAdapter(mStoryModel, mFeeds,mNativeAdsManager);
-//            mAdapter.setOnItemClicklistener(this);
             mListView.setAdapter(mAdapter);
         } else if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
@@ -130,22 +127,9 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
     }
 
     @Override
-    public void onError(Ad ad, AdError adError) {
-        Toast.makeText(this, "Ad failed to load: " + adError.getErrorMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onAdLoaded(Ad ad) {
-
-    }
-
-    @Override
-    public void onAdClicked(Ad ad) {
-        Toast.makeText(this, "Ad Clicked", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onAdsLoaded() {
+        if(mAdapter != null)
+            mAdapter.notifyDataSetChanged();
 //        mAd = this.mNativeAdsManager.nextNativeAd();
 //        if (mAd == null) {
 //            mNativeAdsManager.loadAds();
