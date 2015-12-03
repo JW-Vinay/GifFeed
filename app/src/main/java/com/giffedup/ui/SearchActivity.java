@@ -19,9 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
+import com.flurry.android.ads.FlurryAdBanner;
+import com.flurry.android.ads.FlurryAdBannerListener;
+import com.flurry.android.ads.FlurryAdErrorType;
 import com.giffedup.ApplicationData;
 import com.giffedup.R;
 import com.giffedup.adapters.GridAdapter;
@@ -41,6 +46,8 @@ import retrofit.client.Response;
  */
 public class SearchActivity extends AppCompatActivity implements ItemClickListener {
 
+    private final String AD_SPACE = "Banner bottom search screen";
+
     private Toolbar mToolbar;
     private RecyclerView mGridView;
     private RestClient mRestClient;
@@ -53,10 +60,58 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
     private int mGIFOffset = 0;
     private int mStickerOffset = 0;
 
+    private RelativeLayout mAdLayout;
+
+    private FlurryAdBanner mFlurryAdBanner;
+
+    private FlurryAdBannerListener mAdListener = new FlurryAdBannerListener() {
+        @Override
+        public void onFetched(FlurryAdBanner flurryAdBanner) {
+            mFlurryAdBanner.displayAd();
+        }
+
+        @Override
+        public void onRendered(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onShowFullscreen(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onCloseFullscreen(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onAppExit(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onClicked(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onVideoCompleted(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onError(FlurryAdBanner flurryAdBanner, FlurryAdErrorType flurryAdErrorType, int i) {
+            mFlurryAdBanner.destroy();
+            mFlurryAdBanner.fetchAd();
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search);
+        mAdLayout = (RelativeLayout) findViewById(R.id.adFrame);
         mRestClient = ApplicationData.getInstance().getRestClient();
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mGridView = (RecyclerView) findViewById(R.id.recyclerview);
@@ -75,15 +130,14 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(dy > 0) //check for scroll down
+                if (dy > 0) //check for scroll down
                 {
                     int visibleItemCount = mLayoutManager.getChildCount();
                     int totalItemCount = mLayoutManager.getItemCount();
                     int[] pastVisiblesItems = mLayoutManager.findFirstVisibleItemPositions(null);
 //                    System.out.println("Pos: " + pastVisiblesItems[0]  + " " + pastVisiblesItems.length);
-                    if(mGridAdapter != null && !mGridAdapter.isLoading()) {
-                        if (pastVisiblesItems.length > 0 && (visibleItemCount + pastVisiblesItems[0]) >= totalItemCount)
-                        {
+                    if (mGridAdapter != null && !mGridAdapter.isLoading()) {
+                        if (pastVisiblesItems.length > 0 && (visibleItemCount + pastVisiblesItems[0]) >= totalItemCount) {
                             mGridAdapter.setIsLoading(true);
                             //TODO: Paginate.
                             fetchContentPaginate();
@@ -93,6 +147,21 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
             }
         });
         setUpToolbar();
+        mFlurryAdBanner = new FlurryAdBanner(this, mAdLayout, AD_SPACE);
+        mFlurryAdBanner.setListener(mAdListener);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FlurryAgent.onStartSession(this);
+        mFlurryAdBanner.fetchAd();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FlurryAgent.onEndSession(this);
     }
 
     private void setUpToolbar() {
@@ -231,5 +300,11 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
         intent.putExtra("content", mList.get(position));
         setResult(Activity.RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mFlurryAdBanner.destroy();
     }
 }

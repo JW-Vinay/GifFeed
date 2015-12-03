@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.giffedup.adapters.StoryListAdapter;
 import com.giffedup.model.FlurryDataModel;
 import com.giffedup.model.ImageConfigurationModel;
 import com.giffedup.model.StoryModel;
+import com.giffedup.utils.DividerItemDecoration;
 import com.giffedup.utils.ItemClickListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -49,6 +51,7 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
 
     private RelativeLayout mAdViewContainer;
     private RecyclerView recyclerView;
+    private LinearLayoutManager mLayoutManager;
     private StoryListAdapter adapter;
     private List<StoryModel> storyList;
 
@@ -74,7 +77,7 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
                     .setNativeAd(flurryAdNative)
                     .build();
 
-            if(adapter != null) {
+            if (adapter != null) {
                 adapter.setmFlurryDataModel(mFlurryDataModel);
                 adapter.notifyDataSetChanged();
             }
@@ -179,8 +182,13 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
         flurryAdSetup();
 
 
+        mLayoutManager = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerview_story_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager.setSmoothScrollbarEnabled(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(layout.getContext(), LinearLayoutManager.VERTICAL));
         return layout;
     }
 

@@ -17,6 +17,7 @@ import com.giffedup.adapters.FeedsAdapter;
 import com.giffedup.model.Content;
 import com.giffedup.model.FeedModel;
 import com.giffedup.model.StoryModel;
+import com.giffedup.utils.DividerItemDecoration;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -57,6 +58,7 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
         mLayoutManager.setSmoothScrollbarEnabled(true);
         mListView.setLayoutManager(mLayoutManager);
         mListView.setItemAnimator(new DefaultItemAnimator());
+        mListView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         setUpToolbar();
 
         if (getIntent().getExtras() != null) {

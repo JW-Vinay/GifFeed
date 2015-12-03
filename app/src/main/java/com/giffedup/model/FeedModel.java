@@ -1,5 +1,7 @@
 package com.giffedup.model;
 
+import android.text.TextUtils;
+
 /**
  * Created by vinayr on 10/19/15.
  */
@@ -57,4 +59,16 @@ public class FeedModel {
     public void setmContent(Content mContent) {
         this.mContent = mContent;
     }
+
+    public boolean isTitleEmpty() {
+        return TextUtils.isEmpty(mTitle);
+    }
+
+    public boolean isContentEmpty() {
+        if (mContent == null)
+            return true;
+
+        return false;
+    }
+
 }

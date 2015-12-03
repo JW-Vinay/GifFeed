@@ -8,7 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 
+import com.flurry.android.FlurryAgent;
+import com.flurry.android.ads.FlurryAdBanner;
+import com.flurry.android.ads.FlurryAdBannerListener;
+import com.flurry.android.ads.FlurryAdErrorType;
 import com.giffedup.R;
 import com.giffedup.adapters.TabsPagerAdapter;
 import com.giffedup.utils.Constants;
@@ -21,11 +26,58 @@ import java.util.List;
  */
 public class GiffSelectorActivity extends AppCompatActivity {
 
+    private final String AD_SPACE = "banner bottom gif screen";
+
     private Toolbar mToolbar;
     private ViewPager mPager;
     private TabLayout mTabLayout;
     private TabsPagerAdapter mTabsPagerAdapter;
+    private RelativeLayout mAdLayout;
 
+    private FlurryAdBanner mFlurryAdBanner;
+
+    private FlurryAdBannerListener mAdListener = new FlurryAdBannerListener() {
+        @Override
+        public void onFetched(FlurryAdBanner flurryAdBanner) {
+            mFlurryAdBanner.displayAd();
+        }
+
+        @Override
+        public void onRendered(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onShowFullscreen(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onCloseFullscreen(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onAppExit(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onClicked(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onVideoCompleted(FlurryAdBanner flurryAdBanner) {
+
+        }
+
+        @Override
+        public void onError(FlurryAdBanner flurryAdBanner, FlurryAdErrorType flurryAdErrorType, int i) {
+            mFlurryAdBanner.destroy();
+            mFlurryAdBanner.fetchAd();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +85,11 @@ public class GiffSelectorActivity extends AppCompatActivity {
         setContentView(R.layout.image_selector_view);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setUpToolbar();
+        mAdLayout = (RelativeLayout) findViewById(R.id.adFrame);
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        mFlurryAdBanner = new FlurryAdBanner(this, mAdLayout, AD_SPACE);
+        mFlurryAdBanner.setListener(mAdListener);
         setUpTabs();
     }
 
@@ -43,6 +98,20 @@ public class GiffSelectorActivity extends AppCompatActivity {
         mToolbar.setTitle(R.string.app_name);
         mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FlurryAgent.onStartSession(this);
+        mFlurryAdBanner.fetchAd();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FlurryAgent.onEndSession(this);
+
     }
 
     private void setUpTabs() {
@@ -97,5 +166,11 @@ public class GiffSelectorActivity extends AppCompatActivity {
             setResult(RESULT_OK, data);
             finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mFlurryAdBanner.destroy();
     }
 }

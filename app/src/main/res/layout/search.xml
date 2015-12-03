@@ -25,19 +25,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            android:layout_above="@+id/adFrame"
             android:background="@android:color/transparent"
             android:fadeScrollbars="true"
             android:scrollbarStyle="insideOverlay"
             android:scrollbars="vertical"
-            android:visibility="visible" />
+            android:visibility="visible"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <TextView
             android:id="@+id/emptyView"
@@ -48,6 +48,13 @@
             android:drawableLeft="@drawable/ic_sad"
             android:text="@string/empty_search_results"
             android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/adFrame"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/black" />
     </RelativeLayout>
 
 

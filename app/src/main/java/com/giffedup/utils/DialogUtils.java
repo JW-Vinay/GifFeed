@@ -72,4 +72,29 @@ public class DialogUtils {
         builder.setNegativeButton(R.string.btn_cancel, listener);
         return builder.show();
     }
+
+    public static AlertDialog showErrorDialog(Context context, int title, int message) {
+        return showErrorDialog(context, title, message, null);
+    }
+
+    public static AlertDialog showErrorDialog(Context context, int title, int message, final DialogClickListener dialogClickListener) {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialogClickListener != null) {
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        dialog.dismiss();
+                        dialogClickListener.onPositiveBtnClick();
+                    }
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.compatDialogStyle);
+        builder.setTitle(title);
+        if (message != -1) ;
+            builder.setMessage(message);
+        builder.setPositiveButton(R.string.btn_ok, listener);
+        return builder.show();
+    }
 }

@@ -135,17 +135,24 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-//                generateParseObjects();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void generateParseObjects() {
+        if(mFeeds.get(0).isTitleEmpty() || mFeeds.get(1).isContentEmpty()) {
+            try {
+                DialogUtils.showErrorDialog(getActivity(),R.string.story_error_title, R.string.story_error_msg);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return ;
+
+        }
         final ParseObject storyObject = new ParseObject("Story");
         storyObject.put("title", mFeeds.get(0).getmTitle());
         storyObject.put("contentId", mFeeds.get(1).getmContent().getId());
-//        storyObject.put("contentType", mFeeds.get(1).getmContent().getContentType());
         storyObject.put("smallImage", mFeeds.get(1).getmContent().getSmallImage().createParseObject());
         storyObject.put("downsizedStill", mFeeds.get(1).getmContent().getDownsizedStillImage().createParseObject());
         storyObject.put("downSized", mFeeds.get(1).getmContent().getDownsizedImage().createParseObject());
@@ -162,32 +169,29 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
 
                     List<ParseObject> parseObjectList = new ArrayList<ParseObject>();
                     for (FeedModel model : mFeeds) {
+                        if(model.isContentEmpty())
+                            continue;
                         if (model.getmType() == FeedModel.contentType.FEED) {
                             ParseObject object = new ParseObject("Feed");
                             object.put("title", model.getmTitle());
                             object.put("content", model.getmContent().createParseObject());
                             object.put("parentId", storyObject.getObjectId());
-//                object.put("contentId", model.getmContent().getId());
-//                storyObject.put("contentType", model.getmContent().getContentType());
-//                object.put("smallImage", model.getmContent().getSmallImage().createParseObject());
-//                object.put("downsizedStill", model.getmContent().getDownsizedStillImage().createParseObject());
-//                object.put("downSized", model.getmContent().getDownsizedImage().createParseObject());
-//                object.put("original", model.getmContent().getOriginalImage().createParseObject());
                             parseObjectList.add(object);
-                            ParseObject.saveAllInBackground(parseObjectList, new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e != null)
-                                        e.printStackTrace();
-                                    else {
-                                        Bundle bundle = new Bundle();
-                                        bundle.putInt("finish", Activity.RESULT_OK);
-                                        mFragmentCommunicationInterface.sendMessage(bundle);
-                                    }
-                                }
-                            });
                         }
                     }
+
+                    ParseObject.saveAllInBackground(parseObjectList, new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null)
+                                e.printStackTrace();
+                            else {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("finish", Activity.RESULT_OK);
+                                mFragmentCommunicationInterface.sendMessage(bundle);
+                            }
+                        }
+                    });
                 }
 
             }
