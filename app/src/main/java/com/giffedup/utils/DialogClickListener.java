@@ -5,6 +5,6 @@ package com.giffedup.utils;
  */
 public interface DialogClickListener {
 
-    public void onPositiveBtnClick();
-    public void onNegativeBtnClick();
+    public void onPositiveBtnClick(DialogUtils.dialogTypes dialogType);
+    public void onNegativeBtnClick(DialogUtils.dialogTypes dialogType);
 }

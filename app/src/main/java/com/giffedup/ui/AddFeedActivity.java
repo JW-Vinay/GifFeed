@@ -89,13 +89,13 @@ public class AddFeedActivity extends AppCompatActivity implements FragmentCommun
     }
 
     @Override
-    public void onPositiveBtnClick() {
+    public void onPositiveBtnClick(DialogUtils.dialogTypes dialogType) {
         finish();
         setResult(RESULT_CANCELED);
     }
 
     @Override
-    public void onNegativeBtnClick() {
+    public void onNegativeBtnClick(DialogUtils.dialogTypes dialogType) {
 
     }
 

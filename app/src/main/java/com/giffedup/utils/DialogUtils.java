@@ -12,6 +12,10 @@ import com.giffedup.R;
  */
 public class DialogUtils {
 
+    public static enum dialogTypes{
+        DIALOG_CONFIRM,
+        DIALOG_ERROR
+    }
     public static AlertDialog showDialog(Context context, int title) {
         return showDialog(context, title, -1);
     }
@@ -27,11 +31,11 @@ public class DialogUtils {
                 if (dialogClickListener != null) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
                         dialog.dismiss();
-                        dialogClickListener.onPositiveBtnClick();
+                        dialogClickListener.onPositiveBtnClick(dialogTypes.DIALOG_CONFIRM);
                     }
                     else if (which == DialogInterface.BUTTON_NEGATIVE) {
                         dialog.dismiss();
-                        dialogClickListener.onNegativeBtnClick();
+                        dialogClickListener.onNegativeBtnClick(dialogTypes.DIALOG_CONFIRM);
                     }
 
                 }
@@ -54,11 +58,11 @@ public class DialogUtils {
                 if (dialogClickListener != null) {
                     if (which == DialogInterface.BUTTON_POSITIVE){
                         dialog.dismiss();
-                        dialogClickListener.onPositiveBtnClick();
+                        dialogClickListener.onPositiveBtnClick(dialogTypes.DIALOG_CONFIRM);
                     }
                     else if (which == DialogInterface.BUTTON_NEGATIVE) {
                         dialog.dismiss();
-                        dialogClickListener.onNegativeBtnClick();
+                        dialogClickListener.onNegativeBtnClick(dialogTypes.DIALOG_CONFIRM);
                     }
 
                 }
@@ -84,7 +88,7 @@ public class DialogUtils {
                 if (dialogClickListener != null) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
                         dialog.dismiss();
-                        dialogClickListener.onPositiveBtnClick();
+                        dialogClickListener.onPositiveBtnClick(dialogTypes.DIALOG_ERROR);
                     }
                 }
             }

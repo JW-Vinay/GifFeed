@@ -179,6 +179,7 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
     private void generateParseObjects() {
         if (mFeeds.get(0).isTitleEmpty() || mFeeds.get(1).isContentEmpty()) {
             try {
+                mProgressView.setVisibility(View.GONE);
                 DialogUtils.showErrorDialog(getActivity(), R.string.story_error_title, R.string.story_error_msg);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -253,13 +254,15 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
     }
 
     @Override
-    public void onPositiveBtnClick() {
-        mProgressView.setVisibility(View.VISIBLE);
-        generateParseObjects();
+    public void onPositiveBtnClick(DialogUtils.dialogTypes dialogType) {
+        if(dialogType == DialogUtils.dialogTypes.DIALOG_CONFIRM) {
+            mProgressView.setVisibility(View.VISIBLE);
+            generateParseObjects();
+        }
     }
 
     @Override
-    public void onNegativeBtnClick() {
+    public void onNegativeBtnClick(DialogUtils.dialogTypes dialogType) {
 
     }
 }
