@@ -9,4 +9,5 @@ public class Constants {
     public static final int SEARCH_REQUEST = 200;
     public static final int ADD_REQUEST = 300;
     public static final String TAG_FEED_TEMPLATE_FRAGMENT = "tag_feed_template_fragment";
+    public static final String TAG_STORY_LIST_FRAGMENT = "tag_story_list_fragment";
 }

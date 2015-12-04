@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.giffedup.R;
 import com.giffedup.utils.Constants;
@@ -24,6 +23,7 @@ public class AddFeedActivity extends AppCompatActivity implements FragmentCommun
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_feed);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setUpToolbar();
         addBaseFragment();
@@ -83,8 +83,6 @@ public class AddFeedActivity extends AppCompatActivity implements FragmentCommun
 
         if (bundle != null) {
             int message = bundle.getInt("finish", Activity.RESULT_CANCELED);
-            if (message == RESULT_OK)
-                Toast.makeText(this, R.string.story_published_msg, Toast.LENGTH_SHORT).show();
             setResult(message);
             finish();
         }

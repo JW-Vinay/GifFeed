@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.giffedup.R;
 import com.giffedup.adapters.FeedCreateAdapter;
@@ -36,6 +41,9 @@ import java.util.List;
  */
 public class FeedTemplateFragment extends Fragment implements DialogClickListener {
 
+    private View mProgressView;
+    private ImageView mDoneBtn;
+    private ProgressBar mProgressBar;
     private RecyclerView mListView;
     private FeedCreateAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
@@ -43,7 +51,30 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
     private Button mAddBtn;
     private int mSelectedPosition = 0;
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what) {
+                case -1: //TODO: Error
+                    mProgressView.setVisibility(View.GONE);
+                    mProgressBar.setProgress(0);
+                    mDoneBtn.setSelected(false);
+                    Snackbar.make(getView(), R.string.error_progress, Snackbar.LENGTH_SHORT)
+                            .show();
+                    break;
+                case 1:
+                    mProgressBar.setProgress(mProgressBar.getProgress() + 1);
+                    break;
+                case 2:
+                    mProgressBar.setProgress(mProgressBar.getProgress() + 1);
+                    mDoneBtn.setSelected(true);
+                    break;
+            }
+        }
+    };
+
     private FragmentCommunicationInterface mFragmentCommunicationInterface;
 
     @Override
@@ -93,6 +124,11 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.gridlayout, container, false);
+
+        mProgressView = (View) view.findViewById(R.id.progressLayout);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        mDoneBtn = (ImageView) view.findViewById(R.id.doneImageView);
+        mDoneBtn.setSelected(false);
         mListView = (RecyclerView) view.findViewById(R.id.recyclerview);
         mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mLinearLayoutManager.setSmoothScrollbarEnabled(true);
@@ -131,7 +167,7 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
         switch (item.getItemId()) {
             case R.id.action_done:
                 try {
-                    DialogUtils.showDialog(getActivity(), R.string.title_confirm_publish, R.string.publish_confirm_msg, R.string.btn_confirm,this);
+                    DialogUtils.showDialog(getActivity(), R.string.title_confirm_publish, R.string.publish_confirm_msg, R.string.btn_confirm, this);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -141,15 +177,16 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
     }
 
     private void generateParseObjects() {
-        if(mFeeds.get(0).isTitleEmpty() || mFeeds.get(1).isContentEmpty()) {
+        if (mFeeds.get(0).isTitleEmpty() || mFeeds.get(1).isContentEmpty()) {
             try {
-                DialogUtils.showErrorDialog(getActivity(),R.string.story_error_title, R.string.story_error_msg);
-            }catch(Exception e){
+                DialogUtils.showErrorDialog(getActivity(), R.string.story_error_title, R.string.story_error_msg);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            return ;
+            return;
 
         }
+        mProgressBar.setMax(mFeeds.size() + 1);
         final ParseObject storyObject = new ParseObject("Story");
         storyObject.put("title", mFeeds.get(0).getmTitle());
         storyObject.put("contentId", mFeeds.get(1).getmContent().getId());
@@ -163,29 +200,35 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
             @Override
             public void done(ParseException e) {
 
-                if (e != null)
+                if (e != null) {
                     e.printStackTrace();
-                else {
-
+                    mHandler.obtainMessage(-1).sendToTarget();
+                } else {
+                    mHandler.obtainMessage(1).sendToTarget();
                     List<ParseObject> parseObjectList = new ArrayList<ParseObject>();
+                    int index = 1;
                     for (FeedModel model : mFeeds) {
-                        if(model.isContentEmpty())
+                        if (model.isContentEmpty())
                             continue;
                         if (model.getmType() == FeedModel.contentType.FEED) {
                             ParseObject object = new ParseObject("Feed");
                             object.put("title", model.getmTitle());
                             object.put("content", model.getmContent().createParseObject());
                             object.put("parentId", storyObject.getObjectId());
+                            object.put("order", index++);
                             parseObjectList.add(object);
+                            mHandler.obtainMessage(1).sendToTarget();
                         }
                     }
 
                     ParseObject.saveAllInBackground(parseObjectList, new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
-                            if (e != null)
+                            if (e != null) {
                                 e.printStackTrace();
-                            else {
+                                mHandler.obtainMessage(-1).sendToTarget();
+                            } else {
+                                mHandler.obtainMessage(2).sendToTarget();
                                 Bundle bundle = new Bundle();
                                 bundle.putInt("finish", Activity.RESULT_OK);
                                 mFragmentCommunicationInterface.sendMessage(bundle);
@@ -196,16 +239,6 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
 
             }
         });
-
-//        storyObject.put("feeds", parseObjectList);
-//        storyObject.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//                if(e != null)
-//                    e.printStackTrace();
-//            }
-//        });
-
     }
 
     @Override
@@ -221,6 +254,7 @@ public class FeedTemplateFragment extends Fragment implements DialogClickListene
 
     @Override
     public void onPositiveBtnClick() {
+        mProgressView.setVisibility(View.VISIBLE);
         generateParseObjects();
     }
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -34,6 +35,7 @@ import com.giffedup.api.RestClient;
 import com.giffedup.api.models.ApiResponse;
 import com.giffedup.model.Content;
 import com.giffedup.utils.ItemClickListener;
+import com.giffedup.utils.RecentProvider;
 
 import java.util.List;
 
@@ -206,6 +208,8 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
             String query = intent.getStringExtra(SearchManager.QUERY);
             if (!TextUtils.isEmpty(query)) {
                 mQuery = query;
+                SearchRecentSuggestions searchRecentSuggestions = new SearchRecentSuggestions(this, RecentProvider.AUTHORITY, RecentProvider.MODE);
+                searchRecentSuggestions.saveRecentQuery(query, null);
                 clearData();
                 fetchContent();
             } else {

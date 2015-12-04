@@ -34,4 +34,5 @@
     <string name="story_error_title">Story title or content is missing!</string>
     <string name="story_error_msg">Please insert title &amp; content, then try again.</string>
     <string name="sponsored">Ad</string>
+    <string name="error_progress">Some error has occurred. Please try again later</string>
 </resources>

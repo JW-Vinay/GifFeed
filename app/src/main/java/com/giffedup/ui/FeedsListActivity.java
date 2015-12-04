@@ -73,6 +73,7 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
 
     private void fetchFeeds() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Feed");
+        query.orderByAscending("order");
         query.whereEqualTo("parentId", mStoryModel.getId());
         query.include("content.images.original");
         query.include("content.images.small");

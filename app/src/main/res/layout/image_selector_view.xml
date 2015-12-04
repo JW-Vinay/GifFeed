@@ -29,23 +29,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <include
+        layout="@layout/image_selector_content_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/adFrame"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-        <RelativeLayout
-            android:id="@+id/adFrame"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/black"/>
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

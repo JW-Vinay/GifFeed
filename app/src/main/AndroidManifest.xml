@@ -44,7 +44,8 @@
 
         <activity
             android:name=".ui.FeedsListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SearchActivity"
             android:exported="false"
@@ -69,6 +70,10 @@
         <activity
             android:name="com.flurry.android.FlurryFullscreenTakeoverActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
+        <provider
+            android:name=".utils.RecentProvider"
+            android:authorities="com.recentprovider" />
     </application>
 
 </manifest>
