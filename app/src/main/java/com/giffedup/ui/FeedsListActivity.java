@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.facebook.ads.AdError;
 import com.facebook.ads.NativeAd;
@@ -17,7 +16,6 @@ import com.giffedup.adapters.FeedsAdapter;
 import com.giffedup.model.Content;
 import com.giffedup.model.FeedModel;
 import com.giffedup.model.StoryModel;
-import com.giffedup.utils.DividerItemDecoration;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -39,7 +37,6 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
     private StoryModel mStoryModel;
     private NativeAdsManager mNativeAdsManager;
     private NativeAd mAd;
-//    private List<NativeAd> mAds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +55,6 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
         mLayoutManager.setSmoothScrollbarEnabled(true);
         mListView.setLayoutManager(mLayoutManager);
         mListView.setItemAnimator(new DefaultItemAnimator());
-        mListView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         setUpToolbar();
 
         if (getIntent().getExtras() != null) {
@@ -147,7 +143,7 @@ public class FeedsListActivity extends AppCompatActivity implements NativeAdsMan
 
     @Override
     public void onAdError(AdError adError) {
-        Toast.makeText(this, "Native ads manager failed to load: " + adError.getErrorCode(),
-                Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Native ads manager failed to load: " + adError.getErrorCode(),
+//                Toast.LENGTH_SHORT).show();
     }
 }

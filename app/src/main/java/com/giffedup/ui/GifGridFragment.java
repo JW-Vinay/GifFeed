@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.giffedup.ApplicationData;
 import com.giffedup.R;
@@ -34,6 +35,7 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
     private GridAdapter mGridAdapter;
     private StaggeredGridLayoutManager mLayoutManager;
     private List<? extends Content> mGifList;
+    private TextView mEmptyTextView;
 
     public GifGridFragment() {
         mRestClient = ApplicationData.getInstance().getRestClient();
@@ -53,6 +55,7 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.gridlayout, container, false);
+        mEmptyTextView = (TextView) view.findViewById(R.id.emptyView);
         mGridView = (RecyclerView) view.findViewById(R.id.recyclerview);
         mGridView.setHasFixedSize(true);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -66,7 +69,7 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if(null == mGifList || mGifList.isEmpty()) {
+        if (null == mGifList || mGifList.isEmpty()) {
             fetchGifs();
         }
     }
@@ -77,13 +80,17 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
             @Override
             public void success(ApiResponse apiResponse, Response response) {
                 mGifList = (List<GIF>) apiResponse.getContentList();
-                   checkAndSetAdapters();
+                checkAndSetAdapters();
             }
 
             @Override
             public void failure(RetrofitError error) {
                 error.printStackTrace();
-                System.out.println(error.getMessage());
+                if(error.getKind() == RetrofitError.Kind.NETWORK)
+                    mEmptyTextView.setText(R.string.error_message_network);
+                else
+                    mEmptyTextView.setText(R.string.error_message);
+                checkAndSetAdapters();
             }
         });
     }
@@ -91,7 +98,7 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        checkAndSetAdapters();
+//        checkAndSetAdapters();
     }
 
     @Override
@@ -105,13 +112,21 @@ public class GifGridFragment extends Fragment implements ItemClickListener {
     }
 
     private void checkAndSetAdapters() {
-        if(mGridAdapter == null && mGifList != null) {
-            mGridAdapter = new GridAdapter(mGifList);
-            mGridAdapter.setOnItemClicklistener(this);
-            mGridView.setAdapter(mGridAdapter);
-        }
-        else if(mGridAdapter != null) {
-            mGridAdapter.notifyDataSetChanged();
+
+        if (mGifList == null || mGifList.isEmpty()) {
+            mEmptyTextView.setVisibility(View.VISIBLE);
+            mGridView.setVisibility(View.GONE);
+        } else {
+            mEmptyTextView.setVisibility(View.GONE);
+            mGridView.setVisibility(View.VISIBLE);
+
+            if (mGridAdapter == null) {
+                mGridAdapter = new GridAdapter(mGifList);
+                mGridAdapter.setOnItemClicklistener(this);
+                mGridView.setAdapter(mGridAdapter);
+            } else if (mGridAdapter != null) {
+                mGridAdapter.notifyDataSetChanged();
+            }
         }
     }
 

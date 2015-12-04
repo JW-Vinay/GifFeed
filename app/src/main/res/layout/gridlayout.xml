@@ -16,6 +16,16 @@
         android:scrollbarStyle="insideOverlay"
         android:scrollbars="vertical" />
 
+    <TextView
+        android:id="@+id/emptyView"
+        style="@style/textStyleGeneral"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:drawableLeft="@drawable/ic_sad"
+        android:text="@string/error_message"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/addBtn"
         android:layout_width="match_parent"

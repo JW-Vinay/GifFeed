@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">GifFeed</string>
-    <string name="app_name_sp">GIF Feed!</string>
+    <string name="app_name">What the GIF</string>
+    <string name="app_name_sp">What the GIF!</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
@@ -20,6 +20,8 @@
 
     <string name="empty_query">Invalid Search Query!</string>
     <string name="empty_search_results">Aww! snap we have no results for this!</string>
+    <string name="error_message">Aww! snap seems to be some issue!</string>
+    <string name="error_message_network">Aww! snap seems to be some network issues!</string>
     <string name="title_confirm_publish">Confirm Publish</string>
     <string name="title_confirm_discard">Confirm Discard</string>
     <string name="publish_confirm_msg">Publish story to your feed?</string>

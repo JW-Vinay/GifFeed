@@ -34,8 +34,6 @@ public class StoryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void setmFlurryDataModel(FlurryDataModel flurryDataModel) {
-//        if(mFlurryDataModel != null)
-//            mFlurryDataModel.getmNativeAd().removeTrackingView();
         this.mFlurryDataModel = flurryDataModel;
     }
 

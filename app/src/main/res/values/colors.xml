@@ -14,4 +14,9 @@
     <color name="black_2">#88212121</color>
     <color name="button_green">#ff8bc615</color>
     <color name="red">#F10900</color>
+
+    <!--Swipe Refresh Colors-->
+    <color name="orange">#FF9900</color>
+    <color name="green">#009900</color>
+    <color name="blue">#000099</color>
 </resources>

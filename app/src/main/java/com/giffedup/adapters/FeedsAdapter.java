@@ -39,7 +39,6 @@ public class FeedsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private final int TYPE_AD = 1;
     private final int TYPE_ITEM = 2;
 
-//    private NativeAd ad;
     private int mAdCount = 0;
     private NativeAdsManager mNativeAdsManager;
 

@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/adViewContainer"
@@ -8,17 +9,25 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="#000000" />
+        android:background="@android:color/transparent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_story_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/adViewContainer"
-        android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
-        android:fadeScrollbars="true"
-        android:scrollbarStyle="insideOverlay"
-        android:scrollbars="vertical" />
+        android:layout_centerHorizontal="true">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_story_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            android:fadeScrollbars="true"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

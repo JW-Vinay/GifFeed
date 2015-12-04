@@ -137,11 +137,9 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
                     int visibleItemCount = mLayoutManager.getChildCount();
                     int totalItemCount = mLayoutManager.getItemCount();
                     int[] pastVisiblesItems = mLayoutManager.findFirstVisibleItemPositions(null);
-//                    System.out.println("Pos: " + pastVisiblesItems[0]  + " " + pastVisiblesItems.length);
                     if (mGridAdapter != null && !mGridAdapter.isLoading()) {
                         if (pastVisiblesItems.length > 0 && (visibleItemCount + pastVisiblesItems[0]) >= totalItemCount) {
                             mGridAdapter.setIsLoading(true);
-                            //TODO: Paginate.
                             fetchContentPaginate();
                         }
                     }
@@ -240,6 +238,7 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
             else
                 mStickerOffset = apiResponse.getPages().getOffset()+apiResponse.getPages().getCount();
 
+            mEmptyTextView.setText(R.string.empty_search_results);
             checkAndSetAdapters();
             if(mGridAdapter != null)
                 mGridAdapter.setIsLoading(false);
@@ -248,13 +247,19 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
         @Override
         public void failure(RetrofitError error) {
             error.printStackTrace();
-            System.out.println(error.getMessage());
+            if(error.getKind() == RetrofitError.Kind.NETWORK)
+                mEmptyTextView.setText(R.string.error_message_network);
+            else
+                mEmptyTextView.setText(R.string.error_message);
+            checkAndSetAdapters();
         }
     };
 
+    //TODO: change this to a better approach.
     private boolean matchUrl(String url) {
         return url.contains("v1/gifs/");
     }
+
     private void checkAndSetAdapters() {
 
         if (mList == null || mList.isEmpty()) {
@@ -299,7 +304,6 @@ public class SearchActivity extends AppCompatActivity implements ItemClickListen
 
     @Override
     public void onClick(View view, int position) {
-//        Toast.makeText(getActivity(), ""+position, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.putExtra("content", mList.get(position));
         setResult(Activity.RESULT_OK, intent);

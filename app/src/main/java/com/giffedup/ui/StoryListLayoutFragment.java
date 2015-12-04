@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,10 +46,11 @@ import java.util.List;
  * Use the {@link StoryListLayoutFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StoryListLayoutFragment extends Fragment implements ItemClickListener, AdListener {
+public class StoryListLayoutFragment extends Fragment implements ItemClickListener, AdListener, SwipeRefreshLayout.OnRefreshListener {
 
     private final String AD_SPACE_NAME = "Story screen native ad";
 
+    private SwipeRefreshLayout mRefreshLayout;
     private RelativeLayout mAdViewContainer;
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -130,12 +132,10 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
         return fragment;
     }
 
-    public StoryListLayoutFragment() {
-    }
+    public StoryListLayoutFragment() {}
 
-    public void getStories() {
-        if (storyList == null || storyList.isEmpty()) {
-            storyList = new ArrayList<StoryModel>();
+    public void getStories(final boolean isRefresh) {
+        if (storyList == null || storyList.isEmpty() || isRefresh) {
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Story");
             query.addDescendingOrder("createdAt");
             query.include("smallImage");
@@ -145,6 +145,10 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
             query.findInBackground(new FindCallback<ParseObject>() {
                 public void done(List<ParseObject> object, ParseException e) {
                     if (e == null) {
+                        if(storyList == null)
+                            storyList = new ArrayList<StoryModel>();
+                        else if(isRefresh)
+                                storyList.clear();
                         for (int i = 0; i < object.size(); i++) {
                             String title = object.get(i).getString("title");
                             String id = object.get(i).getObjectId();
@@ -161,6 +165,8 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
                     } else {
                         Log.e("stories", "Error: " + e.getMessage());
                     }
+
+                    mRefreshLayout.setRefreshing(false);
                 }
             });
         }
@@ -178,6 +184,9 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
 
         View layout = inflater.inflate(R.layout.fragment_story_list_layout, container, false);
         mAdViewContainer = (RelativeLayout) layout.findViewById(R.id.adViewContainer);
+        mRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        mRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        mRefreshLayout.setOnRefreshListener(this);
         fbAdSetup();
         flurryAdSetup();
 
@@ -238,14 +247,13 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
     @Override
     public void onResume() {
         super.onResume();
-        getStories();
+        getStories(false);
         checkAndSetAdapters();
     }
 
     public void reload() {
-        storyList = null;
-        adapter = null;
-        getStories();
+        storyList.clear();
+        getStories(false);
     }
 
     @Override
@@ -284,4 +292,8 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
 
     }
 
+    @Override
+    public void onRefresh() {
+        getStories(true);
+    }
 }
