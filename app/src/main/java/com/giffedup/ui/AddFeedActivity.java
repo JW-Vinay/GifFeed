@@ -11,9 +11,11 @@ import android.view.MenuItem;
 
 import com.giffedup.R;
 import com.giffedup.utils.Constants;
+import com.giffedup.utils.DialogClickListener;
+import com.giffedup.utils.DialogUtils;
 import com.giffedup.utils.FragmentCommunicationInterface;
 
-public class AddFeedActivity extends AppCompatActivity implements FragmentCommunicationInterface {
+public class AddFeedActivity extends AppCompatActivity implements FragmentCommunicationInterface, DialogClickListener {
 
     private Toolbar mToolbar;
 
@@ -21,6 +23,7 @@ public class AddFeedActivity extends AppCompatActivity implements FragmentCommun
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_feed);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setUpToolbar();
         addBaseFragment();
@@ -56,20 +59,45 @@ public class AddFeedActivity extends AppCompatActivity implements FragmentCommun
 
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
-                setResult(RESULT_CANCELED);
+                showDiscardDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    public void showDiscardDialog() {
+        try {
+            DialogUtils.showDialog(this, R.string.title_confirm_discard, R.string.discard_confirm, R.string.btn_discard, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        showDiscardDialog();
+    }
+
     @Override
     public void sendMessage(Bundle bundle) {
 
-        if(bundle != null) {
+        if (bundle != null) {
             int message = bundle.getInt("finish", Activity.RESULT_CANCELED);
             setResult(message);
             finish();
         }
     }
+
+    @Override
+    public void onPositiveBtnClick() {
+        finish();
+        setResult(RESULT_CANCELED);
+    }
+
+    @Override
+    public void onNegativeBtnClick() {
+
+    }
+
+
 }

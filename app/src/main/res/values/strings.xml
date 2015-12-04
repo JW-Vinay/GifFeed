@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">GifFeed</string>
-    <string name="app_name_sp">GIF Feed!</string>
+    <string name="app_name">What the GIF</string>
+    <string name="app_name_sp">What the GIF!</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
-    <string name="action_done">Done</string>
-    <string name="hint_caption">Caption your feed</string>
+    <string name="action_done">Publish</string>
+    <string name="hint_caption">Caption your GIF</string>
     <string name="action_add">Add More</string>
     <string name="hint_title">Need a cool story title here...</string>
     <string name="hint_stickers">Search stickers..</string>
@@ -15,7 +15,26 @@
         <item>Sticker</item>
     </string-array>
     <string name="title_activity_story_list">StoryListActivity</string>
+    <string name="icon_desc">Ad icon</string>
+    <string name="image_desc">Ad image</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_query">Invalid Search Query!</string>
+    <string name="empty_search_results">Aww! snap we have no results for this!</string>
+    <string name="error_message">Aww! snap seems to be some issue!</string>
+    <string name="error_message_network">Aww! snap seems to be some network issues!</string>
+    <string name="title_confirm_publish">Confirm Publish</string>
+    <string name="title_confirm_discard">Confirm Discard</string>
+    <string name="publish_confirm_msg">Publish story to your feed?</string>
+    <string name="story_published_msg">Story successfully published to feed!</string>
+    <string name="discard_confirm">Discard your story?</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_discard">Discard</string>
+    <string name="hint_image">Click to Add GIF</string>
+    <string name="edit_image">Edit GIF</string>
+    <string name="story_error_title">Story title or content is missing!</string>
+    <string name="story_error_msg">Please insert title &amp; content, then try again.</string>
+    <string name="sponsored">Ad</string>
+    <string name="error_progress">Some error has occurred. Please try again later</string>
 </resources>

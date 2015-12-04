@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="2dp">
+
+    <ImageView
+        android:id="@+id/mainImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@color/white" />
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/mainImageView"
+        android:background="@color/black_2">
+
+        <TextView
+            android:id="@+id/headlineTextView"
+            style="@style/textStyleGeneral.adTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:id="@+id/summaryTextView"
+            style="@style/textStyleGeneral.adSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/headlineTextView"
+            android:ellipsize="middle"
+            android:maxLines="2" />
+
+        <TextView
+            android:id="@+id/sponsorTextView"
+            style="@style/textStyleGeneral.sponsorLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/summaryTextView"
+            android:layout_toLeftOf="@+id/sponsoredAd"
+            android:layout_toStartOf="@+id/sponsoredAd" />
+
+        <TextView
+            android:id="@+id/sponsoredAd"
+            style="@style/textStyleGeneral.sponsorLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/sponsorTextView"
+            android:layout_toLeftOf="@+id/sponsoredAdLogo"
+            android:layout_toStartOf="@+id/sponsoredAdLogo"
+            android:text="@string/sponsored" />
+
+        <ImageView
+            android:id="@+id/sponsoredAdLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:padding="2dp"
+            android:layout_alignTop="@+id/sponsorTextView"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+    </RelativeLayout>
+</RelativeLayout>

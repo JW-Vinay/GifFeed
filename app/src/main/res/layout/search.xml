@@ -23,16 +23,45 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
+    <include
+        layout="@layout/search_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@android:color/transparent"
-        android:fadeScrollbars="true"
-        android:scrollbarStyle="insideOverlay"
-        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/recyclerview"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_above="@+id/adFrame"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:fadeScrollbars="true"-->
+            <!--android:scrollbarStyle="insideOverlay"-->
+            <!--android:scrollbars="vertical"-->
+            <!--android:visibility="visible"-->
+            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/emptyView"-->
+            <!--style="@style/textStyleGeneral"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:drawableLeft="@drawable/ic_sad"-->
+            <!--android:text="@string/empty_search_results"-->
+            <!--android:visibility="gone" />-->
+
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/adFrame"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:background="@android:color/black" />-->
+    <!--</RelativeLayout>-->
 
 
 </android.support.design.widget.CoordinatorLayout>

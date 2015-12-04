@@ -3,12 +3,14 @@ package com.giffedup.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -67,19 +69,36 @@ public class FeedCreateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             ViewHolder viewHolder = (ViewHolder) holder;
             if (mFeeds.get(position).getmContent() != null) {
-                Glide.with(mContext)
-                        .load(mFeeds.get(position).getmContent().getOriginalImage().getUrl())
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .placeholder(R.drawable.plc_image)
-                        .into(viewHolder.mImageView);
+                String url = mFeeds.get(position).getmContent().getOriginalImage().getUrl();
+                if (TextUtils.isEmpty(url)) {
+
+                    viewHolder.mImageView.setVisibility(View.INVISIBLE);
+                    viewHolder.mPlaceholderText.setVisibility(View.VISIBLE);
+                    viewHolder.mEditTextView.setVisibility(View.GONE);
+                } else {
+
+                    viewHolder.mImageView.setVisibility(View.VISIBLE);
+                    viewHolder.mPlaceholderText.setVisibility(View.GONE);
+                    viewHolder.mEditTextView.setVisibility(View.VISIBLE);
+                    Glide.with(mContext)
+                            .load(mFeeds.get(position).getmContent().getOriginalImage().getUrl())
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .placeholder(R.drawable.plc_image)
+                            .into(viewHolder.mImageView);
+                }
+
 //                Uri uri = Uri.parse(mFeeds.get(position).getmContent().getOriginalImage().getUrl());
 //                DraweeController controller = Fresco.newDraweeControllerBuilder()
 //                        .setUri(uri)
 //                        .setAutoPlayAnimations(true)
 //                        .build();
 //                viewHolder.mImageView.setController(controller);
-            } else
+            } else {
                 viewHolder.mImageView.setImageResource(R.drawable.def_bg);
+                viewHolder.mImageView.setVisibility(View.INVISIBLE);
+                viewHolder.mEditTextView.setVisibility(View.GONE);
+                viewHolder.mPlaceholderText.setVisibility(View.VISIBLE);
+            }
 
             if (mFeeds.get(position).getmTitle() != null)
                 viewHolder.mTitleEdt.setText(mFeeds.get(position).getmTitle());
@@ -128,12 +147,16 @@ public class FeedCreateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView mImageView;
         private EditText mTitleEdt;
+        private TextView mPlaceholderText, mEditTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            mEditTextView = (TextView) itemView.findViewById(R.id.editTextView);
+            mPlaceholderText = (TextView) itemView.findViewById(R.id.hintTextView);
             mImageView = (ImageView) itemView.findViewById(R.id.gifImageView);
             mTitleEdt = (EditText) itemView.findViewById(R.id.captionEditText);
             mImageView.setOnClickListener(this);
+            mPlaceholderText.setOnClickListener(this);
             mTitleEdt.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {

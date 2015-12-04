@@ -12,21 +12,21 @@
         android:layout_centerHorizontal="true"
         android:hint="@string/hint_caption" />
 
-    <!--<com.facebook.drawee.view.SimpleDraweeView-->
-    <!--android:id="@+id/gifImageView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignEnd="@+id/captionEditText"-->
-    <!--android:layout_alignLeft="@+id/captionEditText"-->
-    <!--android:layout_alignRight="@+id/captionEditText"-->
-    <!--android:layout_alignStart="@+id/captionEditText"-->
-    <!--android:layout_below="@+id/captionEditText"-->
-    <!--android:layout_marginTop="10dp"-->
-    <!--fresco:actualImageScaleType="fitStart"-->
-    <!--fresco:fadeDuration="200"-->
-    <!--fresco:failureImage="@drawable/ic_busy"-->
-    <!--fresco:viewAspectRatio="1.33"-->
-    <!--fresco:placeholderImage="@drawable/plc_image" />-->
+    <TextView
+        android:id="@+id/hintTextView"
+        style="@style/textStyleGeneral.bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/gifImageView"
+        android:layout_alignEnd="@+id/captionEditText"
+        android:layout_alignLeft="@+id/captionEditText"
+        android:layout_alignRight="@+id/captionEditText"
+        android:layout_alignStart="@+id/captionEditText"
+        android:layout_alignTop="@+id/gifImageView"
+        android:layout_below="@+id/captionEditText"
+        android:background="@drawable/plc_image"
+        android:text="@string/hint_image" />
+
     <ImageView
         android:id="@+id/gifImageView"
         android:layout_width="match_parent"
@@ -39,21 +39,20 @@
         android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/plc_image" />
+        android:src="@android:color/transparent" />
 
-
-    <!--<ImageView-->
-    <!--android:id="@+id/gifImageView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignEnd="@+id/captionEditText"-->
-    <!--android:layout_alignLeft="@+id/captionEditText"-->
-    <!--android:layout_alignRight="@+id/captionEditText"-->
-    <!--android:layout_alignStart="@+id/captionEditText"-->
-    <!--android:layout_below="@+id/captionEditText"-->
-    <!--android:layout_marginTop="10dp"-->
-    <!--android:adjustViewBounds="true"-->
-    <!--android:scaleType="fitCenter"-->
-    <!--android:src="@drawable/plc_image" />-->
-
+    <TextView
+        android:id="@+id/editTextView"
+        style="@style/textStyleGeneral.bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/gifImageView"
+        android:layout_alignEnd="@+id/gifImageView"
+        android:layout_alignLeft="@+id/gifImageView"
+        android:layout_alignRight="@+id/gifImageView"
+        android:layout_alignStart="@+id/gifImageView"
+        android:background="@color/black_2"
+        android:drawableLeft="@drawable/ic_edit"
+        android:drawablePadding="2dp"
+        android:text="@string/edit_image" />
 </RelativeLayout>

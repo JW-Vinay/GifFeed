@@ -18,10 +18,15 @@ public interface GifService {
     @GET("/v1/gifs/search")
     void searchGIFs(@Query("q") String query, Callback<ApiResponse> callback);
 
+    @GET("/v1/gifs/search")
+    void searchGIFs(@Query("q") String query, @Query("offset")int offset, Callback<ApiResponse> callback);
+
     @GET("/v1/stickers/trending")
     void getTrendingStickers(Callback<ApiResponse> callback);
 
     @GET("/v1/stickers/search")
     void searchStickers(@Query("q") String query, Callback<ApiResponse> callback);
+
+    void searchStickers(@Query("q") String query, @Query("offset") int offset, Callback<ApiResponse> callback);
 
 }

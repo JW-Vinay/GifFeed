@@ -8,6 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.facebook.ads.AdError;
+import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdsManager;
 import com.giffedup.R;
 import com.giffedup.adapters.FeedsAdapter;
 import com.giffedup.model.Content;
@@ -24,7 +27,7 @@ import java.util.List;
 /**
  * Created by vinayr on 10/28/15.
  */
-public class FeedsListActivity extends AppCompatActivity {
+public class FeedsListActivity extends AppCompatActivity implements NativeAdsManager.Listener {
 
     private Toolbar mToolbar;
     private RecyclerView mListView;
@@ -32,11 +35,19 @@ public class FeedsListActivity extends AppCompatActivity {
     private List<FeedModel> mFeeds;
     private FeedsAdapter mAdapter;
     private StoryModel mStoryModel;
+    private NativeAdsManager mNativeAdsManager;
+    private NativeAd mAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.feeds_list);
+
+//        AdSettings.addTestDevice("403dccecad18f54448023f184ec25d3c");
+        mNativeAdsManager = new NativeAdsManager(this, "1015153831849777_1032393410125819", 10);
+        mNativeAdsManager.setListener(this);
+        mNativeAdsManager.loadAds();
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mListView = (RecyclerView) findViewById(R.id.recyclerview);
         mListView.setHasFixedSize(true);
@@ -45,10 +56,11 @@ public class FeedsListActivity extends AppCompatActivity {
         mListView.setLayoutManager(mLayoutManager);
         mListView.setItemAnimator(new DefaultItemAnimator());
         setUpToolbar();
-        if(getIntent().getExtras() != null) {
+
+        if (getIntent().getExtras() != null) {
             mStoryModel = (StoryModel) getIntent().getExtras().getParcelable("content");
             fetchFeeds();
-        }else {
+        } else {
             System.exit(1);
         }
 
@@ -57,6 +69,7 @@ public class FeedsListActivity extends AppCompatActivity {
 
     private void fetchFeeds() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Feed");
+        query.orderByAscending("order");
         query.whereEqualTo("parentId", mStoryModel.getId());
         query.include("content.images.original");
         query.include("content.images.small");
@@ -72,8 +85,8 @@ public class FeedsListActivity extends AppCompatActivity {
                         Content content = new Content(obj.getParseObject("content"));
                         FeedModel feedModel = new FeedModel(title, content);
                         mFeeds.add(feedModel);
-                        checkAndSetAdapters();
                     }
+                    checkAndSetAdapters();
                 } else
                     e.printStackTrace();
             }
@@ -90,19 +103,17 @@ public class FeedsListActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        checkAndSetAdapters();
     }
 
     private void checkAndSetAdapters() {
-        if(mAdapter == null && mFeeds != null) {
-            mAdapter = new FeedsAdapter(this, mStoryModel, mFeeds);
-//            mAdapter.setOnItemClicklistener(this);
+        if (mAdapter == null && mFeeds != null) {
+            mAdapter = new FeedsAdapter(mStoryModel, mFeeds,mNativeAdsManager);
             mListView.setAdapter(mAdapter);
-        }
-        else if(mAdapter != null) {
+        } else if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -114,4 +125,25 @@ public class FeedsListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    public void onAdsLoaded() {
+        if(mAdapter != null)
+            mAdapter.notifyDataSetChanged();
+//        mAd = this.mNativeAdsManager.nextNativeAd();
+//        if (mAd == null) {
+//            mNativeAdsManager.loadAds();
+//            return;
+//        }
+//        mAd.setAdListener(this);
+//        mAds.add(mAd);
+//
+//        if (mAdapter != null)
+//            mAdapter.adNativeAd(mAd);
+    }
+
+    @Override
+    public void onAdError(AdError adError) {
+//        Toast.makeText(this, "Native ads manager failed to load: " + adError.getErrorCode(),
+//                Toast.LENGTH_SHORT).show();
+    }
 }

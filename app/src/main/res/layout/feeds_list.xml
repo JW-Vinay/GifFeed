@@ -32,6 +32,7 @@
         android:fadeScrollbars="true"
         android:scrollbarStyle="insideOverlay"
         android:scrollbars="vertical"
+        android:padding="5dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 

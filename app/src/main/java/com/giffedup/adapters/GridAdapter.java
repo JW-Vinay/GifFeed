@@ -23,6 +23,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     private List<? extends Content> mItems;
     private ItemClickListener mItemClickListener;
+    private boolean isLoading;
 
     public GridAdapter(List<? extends Content> items) {
         mItems = items;
@@ -44,7 +45,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         Glide.with(holder.itemView.getContext())
                 .load(imageConfigurationModel.getUrl())
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .placeholder(R.drawable.ic_home)
+                .placeholder(R.drawable.gif_default)
                 .into(holder.mImageView);
 //        Uri uri = Uri.parse(imageConfigurationModel.getUrl());
 //        DraweeController controller = Fresco.newDraweeControllerBuilder()
@@ -82,5 +83,13 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
     public void setOnItemClicklistener(ItemClickListener itemClicklistener) {
         this.mItemClickListener = itemClicklistener;
+    }
+
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    public void setIsLoading(boolean isLoading) {
+        this.isLoading = isLoading;
     }
 }

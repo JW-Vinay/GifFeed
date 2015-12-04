@@ -5,9 +5,18 @@
     <color name="white">#ffffffff</color>
     <color name="loading_bg">#00ffffff</color>
     <color name="gray">#808080</color>
+    <color name="gray_1">#88808080</color>
     <color name="light_gray">#D3D3D3</color>
     <color name="transparent">#22808080</color>
     <color name="blue_3">#BBDEFB</color>
     <color name="blue_4">#03A9F4</color>
     <color name="black_1">#212121</color>
+    <color name="black_2">#88212121</color>
+    <color name="button_green">#ff8bc615</color>
+    <color name="red">#F10900</color>
+
+    <!--Swipe Refresh Colors-->
+    <color name="orange">#FF9900</color>
+    <color name="green">#009900</color>
+    <color name="blue">#000099</color>
 </resources>

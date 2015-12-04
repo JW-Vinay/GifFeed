@@ -4,8 +4,7 @@
     tools:context=".AddFeedActivity">
     <item
         android:id="@+id/action_done"
-        android:icon="@android:drawable/ic_menu_upload"
         android:orderInCategory="100"
         android:title="@string/action_done"
-        app:showAsAction="always" />
+        app:showAsAction="always|withText" />
 </menu>
