@@ -198,6 +198,7 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
         mLayoutManager.setSmoothScrollbarEnabled(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(layout.getContext(), LinearLayoutManager.VERTICAL));
+        getStories(false);
         return layout;
     }
 
@@ -247,7 +248,7 @@ public class StoryListLayoutFragment extends Fragment implements ItemClickListen
     @Override
     public void onResume() {
         super.onResume();
-        getStories(false);
+//        getStories(false);
         checkAndSetAdapters();
     }
 
